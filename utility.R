@@ -1,4 +1,5 @@
 source("global.R")
+library(mapview)
 
 getData <- function(area, option, month, bType) {
   print("======= get data start =======")
@@ -9,7 +10,8 @@ getData <- function(area, option, month, bType) {
   print("======= get data end =======")
   
   #extract area
-  area_usage_df <- subset(usage_2010_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, tolower(COMMUNITY) == tolower(area))$GEOID10))
+  #area_usage_df <- subset(usage_2010_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, tolower(COMMUNITY) == tolower(area))$GEOID10))
+  area_usage_df <- subset(usage_2010_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, str_replace_all(string=tolower(COMMUNITY), pattern=" ", repl="") == str_replace_all(string=tolower(area), pattern=" ", repl=""))$GEOID10))
   
   #building type
   if(!"All" %in% bType) {
@@ -24,67 +26,54 @@ getData <- function(area, option, month, bType) {
     #pick column by month
     if (month == "January") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.JANUARY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.JANUARY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "February") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.FEBRUARY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.FEBRUARY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "March") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.MARCH.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.MARCH.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "April") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.APRIL.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.APRIL.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "May") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.MAY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.MAY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "June") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.JUNE.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.JUNE.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "July") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.JULY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.JULY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "August") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.AUGUST.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.AUGUST.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "September") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.SEPTEMBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.SEPTEMBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "October") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.OCTOBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.OCTOBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "November") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.NOVEMBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.NOVEMBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "December") {
       area_usage_df <- subset(area_usage_df, !is.na(KWH.DECEMBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$KWH.DECEMBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
     else if (month == "All") {
       area_usage_df <- subset(area_usage_df, !is.na(TOTAL.KWH))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$TOTAL.KWH, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
   }
@@ -92,67 +81,54 @@ getData <- function(area, option, month, bType) {
     #pick column by month
     if (month == "January") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.JANUARY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.JANUARY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "February") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.FEBRUARY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.FEBRUARY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "March") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.MARCH.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.MARCH.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "April") {
       area_usage_df <- subset(area_usage_df, !is.na(TERM.APRIL.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$TERM.APRIL.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "May") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.MAY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.MAY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "June") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.JUNE.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.JUNE.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "July") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.JULY.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.JULY.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "August") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.AUGUST.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.AUGUST.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "September") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.SEPTEMBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.SEPTEMBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "October") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.OCTOBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.OCTOBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "November") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.NOVEMBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.NOVEMBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "December") {
       area_usage_df <- subset(area_usage_df, !is.na(THERM.DECEMBER.2010))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$THERM.DECEMBER.2010, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=FALSE, na.action=NULL)
     }
     else if (month == "All") {
       area_usage_df <- subset(area_usage_df, !is.na(TOTAL.THERMS))
-      print(area_usage_df)
       area_usage_df <- aggregate(area_usage_df$TOTAL.THERMS, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     }
   }
@@ -178,8 +154,8 @@ getData <- function(area, option, month, bType) {
   
   names(area_usage_df)[1] <- c("GEOID10")
   names(area_usage_df)[2] <- c("AMOUNT")
-  print(subset(area_usage_df, GEOID10 == '170318382002018'))
-  selected_block_df <- subset(chicago_block_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, tolower(COMMUNITY) == tolower(area))$GEOID10))
+  
+  selected_block_df <- subset(chicago_block_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, str_replace_all(string=tolower(COMMUNITY), pattern=" ", repl="") == str_replace_all(string=tolower(area), pattern=" ", repl=""))$GEOID10))
   
   usage_block_df <- selected_block_df %>% left_join(area_usage_df)
   
@@ -409,4 +385,95 @@ getPlotData <- function(id) {
 
 getMaxAmount <- function(df) {
   return (max(df$AMOUNT, na.rm = TRUE))
+}
+
+generateMap <- function(option, area, df) {
+  blue = colorRampPalette(c('white', 'blue'))
+  red = colorRampPalette(c('white', 'red'))
+  purple = colorRampPalette(c('white', 'purple'))
+  orange = colorRampPalette(c('white', 'orange'))
+  red2 = colorRampPalette(c('white', 'darkred'))
+  pink2 = colorRampPalette(c('white', 'deeppink'))
+  print(df)
+  if(option == "Electricity") {
+    mapview(df, zcol = "AMOUNT", layer.name = paste(area, "Electricity(KWH)"), col.regions = blue)@map %>% 
+      addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...") 
+  }
+  else if (option == "Gas") {
+    mapview(df, zcol = "AMOUNT", layer.name = paste(area, 'GAS(THERMS)'), col.regions = red)@map %>% 
+      addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...") 
+  }
+  else if (option == "Building Type") {
+    print("hiiii")
+    m <- NULL
+    if(nrow(subset(df, AMOUNT == "Residential")) > 0) 
+      m <- mapview(subset(df, AMOUNT == "Residential"), layer.name = "Residential", zcol = "AMOUNT", col.regions = "#F5793A")
+    if(nrow(subset(df, AMOUNT == "Commercial")) > 0) {
+      if(is.null(m))
+        m <- mapview(subset(df, AMOUNT == "Commercial"), zcol = "AMOUNT", layer.name = "Commercial", col.regions = "#A95AA1")
+      if(!is.null(m))
+        m <- m + mapview(subset(df, AMOUNT == "Commercial"), zcol = "AMOUNT", layer.name = "Commercial", col.regions = "#A95AA1")
+    }
+    if(nrow(subset(df, AMOUNT == "Industrial")) > 0) {
+      if(is.null(m))
+        m <- mapview(subset(df, AMOUNT == "Industrial"), zcol = "AMOUNT", layer.name = "Industrial", col.regions = "#85C0F9") 
+      if(!is.null(m)) 
+        m <- m + mapview(subset(df, AMOUNT == "Industrial"), zcol = "AMOUNT", layer.name = "Industrial", col.regions = "#85C0F9") 
+    }
+    m@map %>% addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...") 
+  }
+  else if (option == "Building Age") {
+    mapview(df, zcol = "AMOUNT", layer.name = 'Building Age', col.regions = purple)@map %>% 
+      addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...") 
+  }
+  else if (option == "Building Height") {
+    mapview(df, zcol = "AMOUNT", layer.name = 'Building Height', col.regions = orange)@map %>% 
+      addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...") 
+  }
+  else if (option == "Total Population") {
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Population', col.regions = red2)@map %>% 
+      addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...") 
+  }
 }

@@ -26,8 +26,9 @@ RV<-reactiveValues(Clicks=list())
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
-  
-  pink2 = colorRampPalette(c('white', 'deeppink'))
+  ###################################
+  #      part I                     #
+  ###################################
   observeEvent(input$westLoopSide_option, {
     option <- input$westLoopSide_option
     
@@ -47,11 +48,8 @@ function(input, output, session) {
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, ifelse(is.null(input$month_data), "All", input$month_data) , input$westLoopSide_buildingType)
     
     output$west_loop_side_map <- renderLeaflet({
-      g <- generateMap(input$westLoopSide_option, usage_block_df)
+      g <- generateMap(input$westLoopSide_option, "Near West Side", usage_block_df)
     })
-    #output$block_data_plot <- renderPlot({
-    #  ggplot(plot_df) + xlim(0, 10) + ylim(0, 100)
-    #})
   })
   
   observeEvent(input$month_data, {
@@ -59,11 +57,8 @@ function(input, output, session) {
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, input$month_data, input$westLoopSide_buildingType)
     
     output$west_loop_side_map <- renderLeaflet({
-      g <- generateMap(input$westLoopSide_option, usage_block_df)
+      g <- generateMap(input$westLoopSide_option, "Near West Side", usage_block_df)
     })
-    #output$block_data_plot <- renderPlot({
-    #  ggplot(plot_df) + xlim(0, 10) + ylim(0, 100)
-    #})
   })
   
   observeEvent(input$westLoopSide_buildingType, {
@@ -71,115 +66,202 @@ function(input, output, session) {
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, ifelse(is.null(input$month_data), "All", input$month_data), input$westLoopSide_buildingType)
     
     output$west_loop_side_map <- renderLeaflet({
-      g <- generateMap(input$westLoopSide_option, usage_block_df)
+      g <- generateMap(input$westLoopSide_option, "Near West Side", usage_block_df)
     })
-    #output$block_data_plot <- renderPlot({
-    #  ggplot(plot_df) + xlim(0, 10) + ylim(0, 100)
-    #})
   })
 
   observeEvent(input$reset_btn, {
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, ifelse(is.null(input$month_data), "All", input$month_data), input$westLoopSide_buildingType)
     
     output$west_loop_side_map <- renderLeaflet({
-      g <- generateMap(input$westLoopSide_option, usage_block_df)
+      g <- generateMap(input$westLoopSide_option, "Near West Side", usage_block_df)
     })
-    #output$block_data_plot <- renderPlot({
-    #  ggplot(plot_df) + xlim(0, 10) + ylim(0, 100)
-    #})
   })
   
   
+  ###################################
+  #      part II                    #
+  ###################################
   
-  
-  generateMap <- function(option, df) {
-    blue = colorRampPalette(c('white', 'blue'))
-    red = colorRampPalette(c('white', 'red'))
-    purple = colorRampPalette(c('white', 'purple'))
-    orange = colorRampPalette(c('white', 'orange'))
-    red2 = colorRampPalette(c('white', 'darkred'))
-    pink2 = colorRampPalette(c('white', 'deeppink'))
+  ###########left map################
+  observeEvent(input$l_area, {
+    usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)
     
-    if(option == "Electricity") {
-      mapview(df, zcol = "AMOUNT", layer.name = "Electricity(KWH)", col.regions = blue)@map %>% 
-        addMapPane("polygons", zIndex = 999) %>% 
-        addCircleMarkers(data = df, 
-                             lat = ~as.numeric(INTPTLAT10), 
-                             lng = ~as.numeric(INTPTLON10), 
-                             fillOpacity=0, 
-                             weight = 0, 
-                             options = pathOptions(pane = "polygons"), 
-                             layerId = ~GEOID10, label = "Generate plot...") 
+    output$l_map <- renderLeaflet({
+      g <- generateMap(input$l_option, input$l_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$l_option, {
+    option <- input$l_option
+    
+    if(input$l_option == "Electricity" || input$l_option == "Gas") {
+      output$l_monthList <- renderUI({
+        tags$div(class = "filter",
+                 selectizeInput(
+                   'l_month_data', 'Select a Month: ', choices = c("All", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"), selected = "All", multiple = FALSE
+                 )
+        )
+      })
     }
-    else if (option == "Gas") {
-      mapview(df, zcol = "AMOUNT", layer.name = 'GAS(THERMS)', col.regions = red)@map %>% 
-        addMapPane("polygons", zIndex = 999) %>% 
-        addCircleMarkers(data = df, 
-                         lat = ~as.numeric(INTPTLAT10), 
-                         lng = ~as.numeric(INTPTLON10), 
-                         fillOpacity=0, 
-                         weight = 0, 
-                         options = pathOptions(pane = "polygons"), 
-                         layerId = ~GEOID10, label = "Generate plot...") 
+    else {
+      output$monthList <- renderUI({ })
     }
-    else if (option == "Building Type") {
-      #df$AMOUNT_2 <- "Other"
-      #df$AMOUNT_2[df$AMOUNT == "Residential"] <- "Residential"
-      #df$AMOUNT_2[df$AMOUNT == "Commercial"] <- "Commercial"
-      #df$AMOUNT_2[df$AMOUNT == "Industrial"] <- "Industrial"
-      print(df)
-      #mapview(df, zcol = "AMOUNT_2", layer.name = 'Building Type', col.regions = c("Residential" = "red", "green", "blue", "orange"))@map %>% 
-      m <- NULL
-      if(nrow(subset(df, AMOUNT == "Residential")) > 0)
-        m <- mapview(subset(df, AMOUNT == "Residential"), layer.name = "Residential", zcol = "AMOUNT", col.regions = "#F5793A")
-      if(nrow(subset(df, AMOUNT == "Commercial")) > 0)
-        m <- m + mapview(subset(df, AMOUNT == "Commercial"), zcol = "AMOUNT", layer.name = "Commercial", col.regions = "#A95AA1") 
-      if(nrow(subset(df, AMOUNT == "Industrial")) > 0)
-        m <- m + mapview(subset(df, AMOUNT == "Industrial"), zcol = "AMOUNT", layer.name = "Industrial", col.regions = "#85C0F9") 
+  
+    usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data) , input$l_buildingType)
+    
+    output$l_map <- renderLeaflet({
+      g <- generateMap(input$l_option, input$l_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$l_month_data, {
+    month <- input$l_month_data
+    usage_block_df <- getData(input$l_area, input$l_option, input$l_month_data, input$l_buildingType)
+    
+    output$l_map <- renderLeaflet({
+      g <- generateMap(input$l_option, input$l_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$l_buildingType, {
+    bType <- input$l_buildingType
+    usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)
+    
+    output$l_map <- renderLeaflet({
+      g <- generateMap(input$l_option, input$l_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$l_reset_btn, {
+    usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)
+    
+    output$l_map <- renderLeaflet({
+      g <- generateMap(input$l_option, input$l_area, usage_block_df)
+    })
+  })
+  
+  observe({ 
+    p <- input$l_map_marker_click  # typo was on this line
+    print(p$id)
+    if(!is.null(p$id)) {
+      plotData <- getPlotData(p$id)
+      
+      if(!is.null(plotData)) {
+        p2 <- ggplot(subset(plotData, GEOID10 == p$id), aes(x = MONTH, y = AMOUNT)) + 
+          geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+          labs(title=paste("Annual usage in ", p$id), x="Month", y = "Amount") + 
+          scale_y_continuous(labels = scales::comma) + 
+          scale_x_continuous(breaks = seq(1, 12, 1),
+                             labels = c("1" = "Jan", 
+                                        "2" = "Fab",
+                                        "3" = "Mar",
+                                        "4" = "Apr",
+                                        "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+          theme(legend.position="bottom") +
+          scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
         
-      m@map %>% addMapPane("polygons", zIndex = 999) %>% 
-        addCircleMarkers(data = df, 
-                         lat = ~as.numeric(INTPTLAT10), 
-                         lng = ~as.numeric(INTPTLON10), 
-                         fillOpacity=0, 
-                         weight = 0, 
-                         options = pathOptions(pane = "polygons"), 
-                         layerId = ~GEOID10, label = "Generate plot...") 
+        output$l_block_data_plot <- renderPlot({
+          p2
+        })
+      }
+      else {
+        output$l_block_data_plot <- renderPlot({})
+      }
     }
-    else if (option == "Building Age") {
-      mapview(df, zcol = "AMOUNT", layer.name = 'Building Age', col.regions = purple)@map %>% 
-        addMapPane("polygons", zIndex = 999) %>% 
-        addCircleMarkers(data = df, 
-                         lat = ~as.numeric(INTPTLAT10), 
-                         lng = ~as.numeric(INTPTLON10), 
-                         fillOpacity=0, 
-                         weight = 0, 
-                         options = pathOptions(pane = "polygons"), 
-                         layerId = ~GEOID10, label = "Generate plot...") 
+  })
+  
+  ###########right map###############
+  observeEvent(input$r_area, {
+    usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data), input$r_buildingType)
+    
+    output$rr_map <- renderLeaflet({
+      g <- generateMap(input$r_option, input$r_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$r_option, {
+    
+    option <- input$r_option
+    
+    if(input$r_option == "Electricity" || input$r_option == "Gas") {
+      output$r_monthList <- renderUI({
+        tags$div(class = "filter",
+                 selectizeInput(
+                   'r_month_data', 'Select a Month: ', choices = c("All", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"), selected = "All", multiple = FALSE
+                 )
+        )
+      })
     }
-    else if (option == "Building Height") {
-      mapview(df, zcol = "AMOUNT", layer.name = 'Building Height', col.regions = orange)@map %>% 
-        addMapPane("polygons", zIndex = 999) %>% 
-        addCircleMarkers(data = df, 
-                         lat = ~as.numeric(INTPTLAT10), 
-                         lng = ~as.numeric(INTPTLON10), 
-                         fillOpacity=0, 
-                         weight = 0, 
-                         options = pathOptions(pane = "polygons"), 
-                         layerId = ~GEOID10, label = "Generate plot...") 
+    else {
+      output$r_monthList <- renderUI({ })
     }
-    else if (option == "Total Population") {
-      mapview(df, zcol = "AMOUNT", layer.name = 'Total Population', col.regions = red2)@map %>% 
-        addMapPane("polygons", zIndex = 999) %>% 
-        addCircleMarkers(data = df, 
-                         lat = ~as.numeric(INTPTLAT10), 
-                         lng = ~as.numeric(INTPTLON10), 
-                         fillOpacity=0, 
-                         weight = 0, 
-                         options = pathOptions(pane = "polygons"), 
-                         layerId = ~GEOID10, label = "Generate plot...") 
+    
+    usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data) , input$r_buildingType)
+    
+    output$rr_map <- renderLeaflet({
+      g <- generateMap(input$r_option, input$r_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$r_month_data, {
+    month <- input$r_month_data
+    usage_block_df <- getData(input$r_area, input$r_option, input$r_month_data, input$r_buildingType)
+    
+    output$rr_map <- renderLeaflet({
+      generateMap(input$r_option, input$r_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$r_buildingType, {
+    bType <- input$r_buildingType
+    usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data), input$r_buildingType)
+    
+    output$rr_map <- renderLeaflet({
+      g <- generateMap(input$r_option, input$r_area, usage_block_df)
+    })
+  })
+  
+  observeEvent(input$r_reset_btn, {
+    usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data), input$r_buildingType)
+    
+    output$rr_map <- renderLeaflet({
+      g <- generateMap(input$r_option, input$r_area, usage_block_df)
+    })
+  })
+  
+  observe({ 
+    p <- input$r_map_marker_click  # typo was on this line
+    print(p$id)
+    if(!is.null(p$id)) {
+      plotData <- getPlotData(p$id)
+      
+      if(!is.null(plotData)) {
+        p2 <- ggplot(subset(plotData, GEOID10 == p$id), aes(x = MONTH, y = AMOUNT)) + 
+          geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+          labs(title=paste("Annual usage in ", p$id), x="Month", y = "Amount") + 
+          scale_y_continuous(labels = scales::comma) + 
+          scale_x_continuous(breaks = seq(1, 12, 1),
+                             labels = c("1" = "Jan", 
+                                        "2" = "Fab",
+                                        "3" = "Mar",
+                                        "4" = "Apr",
+                                        "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+          theme(legend.position="bottom") +
+          scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
+        
+        output$r_block_data_plot <- renderPlot({
+          p2
+        })
+      }
+      else {
+        output$r_block_data_plot <- renderPlot({})
+      }
     }
-  }
+  })
+  
+  
+  ####################################
   
   observe({ 
     p <- input$west_loop_side_map_marker_click  # typo was on this line

@@ -40,7 +40,7 @@ ui <- fluidPage(class = "p-0 m-0",
         tags$div(class = "p-0",
             navbarPage("",
                 #energy plants location start
-                tabPanel("Energy Plants in IL 2018", class = "p-0",
+                tabPanel("West Loop Side Census Data 2010", class = "p-0",
                     mainPanel(class = "panel p-0",
                         fluidRow(
                             column(12, class = "p-0",
@@ -128,7 +128,7 @@ ui <- fluidPage(class = "p-0 m-0",
                 ), #energy plants location end
 
                 #Camparison page start
-                tabPanel("Energy Plants Maps Comparison", class = "p-0",
+                tabPanel("Community Area Comparison", class = "p-0",
                     mainPanel(class = "panel p-0",
                         #first map start
                         column(6, class = "p-0",
@@ -136,47 +136,62 @@ ui <- fluidPage(class = "p-0 m-0",
                                 #card Start
                                 tags$div(class = "card-body",
                                     tags$div(
-                                        column(2, class = "p-0",
-                                            tags$div(class = "title",
-                                                tags$span("First Map")
-                                            )
-                                        ),
-                                        column(2, class = "p-0",
-                                            tags$div(class = "",
-                                                #checkboxInput("isSync", label = "sync", value = FALSE)
-                                            )
-                                        ),
-                                        column(4,
-                                            tags$div(
-                                                tags$div(class = "filter, cust-text",
-                                                    #selectizeInput(
-                                                    #    'yearInput_first', 'Select a year: ', choices = year_dist, selected = "2000", multiple = FALSE
-                                                    #)
-                                                )
-                                            )
-                                        ),
-                                        column(4,
-                                            tags$div(
-                                                tags$div(class = "filter, cust-text",
-                                                    #selectizeInput(
-                                                    #    'stateInput_first', 'Select a state: ', choices = state_dist, selected = "Illinois", multiple = FALSE
-                                                    #)
-                                                )
-                                            )
+                                        tags$div(class = "title",
+                                            tags$span("First Map")
                                         )
                                     ),
                                     fluidRow(style = "margin: 2px",
-                                        column(3,
-                                            #uiOutput("checkbox_first"),
-                                            #actionButton("reset_com_first", "Reset view")
-                                        ),
-                                        column(9,
-                                            tags$div(style = "height: 650px",
-                                                #shinycssloaders::withSpinner(
-                                                #    leafletOutput("leaf_com_first", height = 630),
-                                                #)
+                                        column(4, style = "background-color: white",
+                                                tags$div(
+                                                    tags$div(class = "subtitle",
+                                                        tags$i(class = "fas fa-search"),
+                                                            "Data Filter:"
+                                                    ),
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            'l_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Near West Side", multiple = FALSE
+                                                        )
+                                                    ),
+                                                    #opitons
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            'l_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population"), selected = "Electricity", multiple = FALSE
+                                                        )
+                                                    ), #options
+                                                    uiOutput("l_monthList"),
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            'l_buildingType', 'Select a Building Type: ', choices = c("All", "Commercial", "Residential", "Industrial"), selected = "All", multiple = TRUE
+                                                        )
+                                                    ), #options
+                                                    actionButton("l_reset_btn", "Reset")
+                                                ),
+                                                tags$div(style="margin-top: 10px",
+                                                    tags$div(class = "subtitle",
+                                                        tags$i(class = "fas fa-search"),
+                                                            "Census Plot:"
+                                                    ),
+                                                    tags$div(
+                                                        plotOutput("l_block_data_plot", height = 250)
+                                                    )
+                                                )
+                                                
+                                            ),
+                                            column(8,
+                                                tags$div(class = "row",
+                                                    column(12,
+                                                        tags$div(class = "subtitle",
+                                                            tags$i(class = "fas fa-map-marked-alt"),
+                                                                "Map:"
+                                                        ),
+                                                        tags$div(style = "height: 650px",
+                                                            #shinycssloaders::withSpinner(
+                                                                leafletOutput("l_map", height = 630)
+                                                            #)
+                                                        )
+                                                    )
+                                                )
                                             )
-                                        )
                                     ) #End of fluid row
                                 ) #End of card
                             )
@@ -187,43 +202,63 @@ ui <- fluidPage(class = "p-0 m-0",
                                 #card Start
                                 tags$div(class = "card-body",
                                     tags$div(
-                                        column(4, class = "p-0",
-                                            tags$div(
-                                                class = "title",
-                                                tags$span("Second Map")
-                                            )
-                                        ),
-                                        column(4,
-                                            tags$div(
-                                                tags$div(class = "filter, cust-text",
-                                                    #selectizeInput(
-                                                    #    'yearInput_second', 'Select a year: ', choices = year_dist, selected = "2018", multiple = FALSE
-                                                    #)
-                                                )
-                                            )
-                                        ),
-                                        column(4,
-                                            tags$div(
-                                                tags$div(class = "filter, cust-text",
-                                                    #selectizeInput(
-                                                    #    'stateInput_second', 'Select a state: ', choices = state_dist, selected = "Illinois", multiple = FALSE
-                                                    #)
-                                                )
-                                            )
+                                        tags$div(
+                                            class = "title",
+                                            tags$span("Second Map")
                                         )
                                     ),
                                     fluidRow(style = "margin: 2px",
-                                        column(3,
-                                            #uiOutput("checkbox_second"),
-                                            #actionButton("reset_com_second", "Reset view")
-                                        ),
-                                        column(9,
-                                            tags$div(style = "height: 650px",
-                                                #shinycssloaders::withSpinner(
-                                                #    leafletOutput("leaf_com_second", height = 630),
-                                                #)
+                                        column(4, style = "background-color: white",
+                                                tags$div(
+                                                    tags$div(class = "subtitle",
+                                                        tags$i(class = "fas fa-search"),
+                                                            "Data Filter:"
+                                                    ),
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            'r_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Loop", multiple = FALSE
+                                                        )
+                                                    ),
+                                                    #opitons
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            'r_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population"), selected = "Electricity", multiple = FALSE
+                                                        )
+                                                    ), #options
+                                                    uiOutput("r_monthList"),
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            'r_buildingType', 'Select a Building Type: ', choices = c("All", "Commercial", "Residential", "Industrial"), selected = "All", multiple = TRUE
+                                                        )
+                                                    ), #options
+                                                    actionButton("r_reset_btn", "Reset")
+                                                ),
+                                                tags$div(style="margin-top: 10px",
+                                                    tags$div(class = "subtitle",
+                                                        tags$i(class = "fas fa-search"),
+                                                            "Census Plot:"
+                                                    ),
+                                                    tags$div(
+                                                        plotOutput("r_block_data_plot", height = 250)
+                                                    )
+                                                )
+                                                
+                                            ),
+                                            column(8,
+                                                tags$div(class = "row",
+                                                    column(12,
+                                                        tags$div(class = "subtitle",
+                                                            tags$i(class = "fas fa-map-marked-alt"),
+                                                                "Map:"
+                                                        ),
+                                                        tags$div(style = "height: 650px",
+                                                            #shinycssloaders::withSpinner(
+                                                                leafletOutput("rr_map", height = 630),
+                                                            #)
+                                                        )
+                                                    )
+                                                )
                                             )
-                                        )
                                     ) #End of fluid row
                                 ) #End of card
                             )
