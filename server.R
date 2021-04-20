@@ -231,7 +231,7 @@ function(input, output, session) {
   })
   
   observe({ 
-    p <- input$r_map_marker_click  # typo was on this line
+    p <- input$rr_map_marker_click  # typo was on this line
     print(p$id)
     if(!is.null(p$id)) {
       plotData <- getPlotData(p$id)
@@ -262,7 +262,92 @@ function(input, output, session) {
   
   
   ####################################
+  #            part 3                #
+  ####################################
+  observeEvent(input$t_option, {
+    
+    option <- input$t_option
+    
+    if(input$t_option == "Electricity" || input$t_option == "Gas") {
+      output$t_monthList <- renderUI({
+        tags$div(class = "filter",
+                 selectizeInput(
+                   't_month_data', 'Select a Month: ', choices = c("All", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"), selected = "All", multiple = FALSE
+                 )
+        )
+      })
+    }
+    else {
+      output$t_monthList <- renderUI({ })
+    }
+    
+    #usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$r_month_data), "All", input$t_month_data) , input$t_buildingType)
+    usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
+    
+    output$t_map <- renderLeaflet({
+      g <- generateMap(input$t_option, "Chicago",usage_block_df)
+    })
+  })
   
+  observeEvent(input$t_month_data, {
+    month <- input$t_month_data
+    usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
+    
+    output$t_map <- renderLeaflet({
+      g <- generateMap(input$t_option, "Chicago", usage_block_df)
+    })
+  })
+  
+  observeEvent(input$t_buildingType, {
+    bType <- input$t_buildingType
+    usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
+    
+    output$t_map <- renderLeaflet({
+      g <- generateMap(input$t_option, "Chicago", usage_block_df)
+    })
+  })
+  
+  
+  observeEvent(input$t_reset_btn, {
+    usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
+    
+    output$t_map <- renderLeaflet({
+      g <- generateMap(input$t_option, "Chicago", usage_block_df)
+    })
+  })
+  
+  observe({ 
+    p <- input$t_map_marker_click  # typo was on this line
+    print(p$id)
+    if(!is.null(p$id)) {
+      plotData <- getPlotData_t(p$id)
+      
+      if(!is.null(plotData)) {
+        p2 <- ggplot(subset(plotData, GEOID10 == p$id), aes(x = MONTH, y = AMOUNT)) + 
+          geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+          labs(title=paste("Annual usage in ", p$id), x="Month", y = "Amount") + 
+          scale_y_continuous(labels = scales::comma) + 
+          scale_x_continuous(breaks = seq(1, 12, 1),
+                             labels = c("1" = "Jan", 
+                                        "2" = "Fab",
+                                        "3" = "Mar",
+                                        "4" = "Apr",
+                                        "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+          theme(legend.position="bottom") +
+          scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
+        
+        output$tract_data_plot <- renderPlot({
+          p2
+        })
+      }
+      else {
+        output$tract_data_plot <- renderPlot({})
+      }
+    }
+  })
+  
+  
+  ####################################
   observe({ 
     p <- input$west_loop_side_map_marker_click  # typo was on this line
     print(p$id)

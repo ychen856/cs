@@ -275,71 +275,57 @@ ui <- fluidPage(class = "p-0 m-0",
                                 #card Start
                                 tags$div(class = "card-body",
                                     tags$div(
-                                        column(2, class = "p-0",
-                                            tags$div(
-                                                class = "title",
-                                                tags$span("Energy Plants in US")
-                                            )
-                                        ),
-                                        column(2,
-                                            tags$div(
-                                                tags$div(class = "filter cust-text",
-                                                    #selectizeInput(
-                                                    #    'yearInput_us', 'Select a year: ', choices = year_dist, selected = "2018", multiple = FALSE
-                                                    #)
-                                                )
-                                            )
-                                        ),
-                                        column(2,
-                                            tags$div(
-                                                tags$div(class = "filter, cust-text",
-                                                    #selectizeInput(
-                                                    #    'stateInput_us', 'Select a state: ', choices = c("All States", state_dist), selected = "All States", multiple = FALSE
-                                                    #)
-                                                )
-                                            )
-                                        ),
-                                        column(5, 
-                                            column(6, 
-                                                tags$div(
-                                                    #uiOutput("slider_left"),
-                                                )
-                                            ),
-                                            column(6, 
-                                                tags$div(
-                                                    #uiOutput("slider_right"),
-                                                )
-                                            )
-                                        ),
-                                        column(1, 
-                                            tags$div(class = "",
-                                                #checkboxInput("isInverse", label = "inverse", value = FALSE)
-                                            )
+                                        tags$div(
+                                            class = "title",
+                                            tags$span("Energy Plants in US")
                                         )
                                     ),
                                     fluidRow(style = "margin: 2px",
-                                        column(2,
-                                            tags$div(
-                                                tags$div(class = "subtitle",
-                                                    tags$i(class = "fas fa-search"),
-                                                        "Data Filter:"
+                                            column(2, style = "background-color: white",
+                                                tags$div(
+                                                    tags$div(class = "subtitle",
+                                                        tags$i(class = "fas fa-search"),
+                                                            "Data Filter:"
+                                                    ),
+
+                                                    #opitons
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            't_option', 'Select a Data Option: ', choices = c("Electricity", "10% Most Electricity", "Gas", "10% Most Gas", "Building Type", "Building Age", "10% Newest Buildings", "10% Oldest Buildings", "Building Height", "10% Tallest Buildings", "Total Population", "10% Most Population", "10% Most Occupied", "10% Highest Renting Rate"), selected = "Electricity", multiple = FALSE
+                                                        )
+                                                    ), #options
+                                                    uiOutput("t_monthList"),
+                                                    tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            't_buildingType', 'Select a Building Type: ', choices = c("All", "Commercial", "Residential", "Industrial"), selected = "All", multiple = TRUE
+                                                        )
+                                                    ), #options
+                                                    actionButton("t_reset_btn", "Reset")
                                                 ),
-                                                #Energy source filter start
-                                                tags$div(class = "filter",
-                                                    #checkboxGroupInput("energySourceInput_us", "Energy source: ", choices = c(energySource_dist))
-                                                ), #energy source filter end
-                                                #actionButton("reset_us", "Reset view")
-                                            )
-                                        ),
-                                        column(10,
-                                            tags$div(class = "subtitle",
-                                                tags$i(class = "fas fa-map-marked-alt"),
-                                                    "Map:"
-                                                ),
-                                                tags$div(style = "height: 620px",
-                                                    #shinycssloaders::withSpinner(
-                                                    #    leafletOutput("leaf_us", height = 620),
-                                                    #)
+                                                tags$div(style="margin-top: 10px",
+                                                    tags$div(class = "subtitle",
+                                                        tags$i(class = "fas fa-search"),
+                                                            "Census Plot:"
+                                                    ),
+                                                    tags$div(
+                                                        plotOutput("tract_data_plot", height = 300)
+                                                    )
+                                                )
+                                                
+                                            ),
+                                            column(10,
+                                                tags$div(class = "row",
+                                                    column(12,
+                                                        tags$div(class = "subtitle",
+                                                            tags$i(class = "fas fa-map-marked-alt"),
+                                                                "Map:"
+                                                        ),
+                                                        tags$div(style = "height: 650px",
+                                                            #shinycssloaders::withSpinner(
+                                                                leafletOutput("t_map", height = 630),
+                                                            #)
+                                                        )
+                                                    )
                                                 )
                                             )
                                         ) #End of fluid row
