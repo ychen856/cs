@@ -11,7 +11,8 @@ getData <- function(area, option, month, bType) {
   
   #extract area
   #area_usage_df <- subset(usage_2010_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, tolower(COMMUNITY) == tolower(area))$GEOID10))
-  area_usage_df <- subset(usage_2010_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, str_replace_all(string=tolower(COMMUNITY), pattern=" ", repl="") == str_replace_all(string=tolower(area), pattern=" ", repl=""))$GEOID10))
+  area_usage_df <- subset(usage_2010_df, str_replace_all(string=tolower(COMMUNITY.AREA.NAME), pattern=" ", repl="") == str_replace_all(string=tolower(area), pattern=" ", repl=""))
+  selected_block_df <- subset(chicago_block_df, GEOID10 %in% area_usage_df$GEOID10)
   
   #building type
   if(!"All" %in% bType) {
@@ -151,11 +152,17 @@ getData <- function(area, option, month, bType) {
   else if (option == "Total Population") {
     area_usage_df <- aggregate(area_usage_df$TOTAL.POPULATION, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
   }
+  else if(option == "Average House Size") {
+    area_usage_df <- aggregate(area_usage_df$AVERAGE.HOUSESIZE, by=list(area_usage_df$CENSUS.BLOCK), FUN=mean, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
+  }
+  else if(option == "Total Units") {
+    area_usage_df <- aggregate(area_usage_df$TOTAL.UNITS, by=list(area_usage_df$CENSUS.BLOCK), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
+  }
   
   names(area_usage_df)[1] <- c("GEOID10")
   names(area_usage_df)[2] <- c("AMOUNT")
   
-  selected_block_df <- subset(chicago_block_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, str_replace_all(string=tolower(COMMUNITY), pattern=" ", repl="") == str_replace_all(string=tolower(area), pattern=" ", repl=""))$GEOID10))
+  #selected_block_df <- subset(chicago_block_df, substr(GEOID10, 1, 11) %in% unique(subset(area_tract_mapping_df, str_replace_all(string=tolower(COMMUNITY), pattern=" ", repl="") == str_replace_all(string=tolower(area), pattern=" ", repl=""))$GEOID10))
   
   usage_block_df <- selected_block_df %>% left_join(area_usage_df)
   
@@ -167,7 +174,6 @@ getData <- function(area, option, month, bType) {
 
 getPlotData <- function(id) {
   usage_id_df <- subset(usage_2010_df, GEOID10 == id)
-  print(usage_id_df)
   if(nrow(usage_id_df) < 1)
     return (NULL)
   
@@ -383,7 +389,6 @@ getPlotData <- function(id) {
 
 getPlotData_t <- function(id) {
   usage_id_df <- subset(usage_2010_df, TRACT.ID == id)
-  print(usage_id_df)
   if(nrow(usage_id_df) < 1)
     return (NULL)
   
@@ -715,6 +720,28 @@ generateMap <- function(option, area, df) {
                        layerId = ~GEOID10, label = "Generate plot...") 
     
   }
+  else if (option == "Total Units") {
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Units', col.regions = yellow)@map %>% 
+      addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...") 
+  }
+  else if(option == "Average House Size") {
+    mapview(df, zcol = "AMOUNT", layer.name = 'House Size', col.regions = yellow)@map %>% 
+      addMapPane("polygons", zIndex = 999) %>% 
+      addCircleMarkers(data = df, 
+                       lat = ~as.numeric(INTPTLAT10), 
+                       lng = ~as.numeric(INTPTLON10), 
+                       fillOpacity=0, 
+                       weight = 0, 
+                       options = pathOptions(pane = "polygons"), 
+                       layerId = ~GEOID10, label = "Generate plot...")
+  }
 }
 
 getTrackData <- function(option, month, bType) {
@@ -724,11 +751,11 @@ getTrackData <- function(option, month, bType) {
   print("======= get data end =======")
   
   area_usage_df <- usage_2010_df
-  print("A")
+  
   if(!"All" %in% bType) {
     area_usage_df <- subset(area_usage_df, BUILDING.TYPE %in% bType)
   }
-  print("B")
+  
   
   if (option == "Electricity") {
     #pick column by month
@@ -876,9 +903,7 @@ getTrackData <- function(option, month, bType) {
   else if(option == "10% Tallest Buildings") {
     area_usage_df <- aggregate(area_usage_df$AVERAGE.STORIES, by=list(area_usage_df$TRACT.ID), FUN=mean, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     area_usage_df <- area_usage_df[order(-area_usage_df[2]),]
-    print(area_usage_df)
     area_usage_df <- head(area_usage_df, 0.1*nrow(area_usage_df))
-    print(area_usage_df)
   }
   else if (option == "Total Population") {
     area_usage_df <- aggregate(area_usage_df$TOTAL.POPULATION, by=list(area_usage_df$TRACT.ID), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
@@ -890,7 +915,6 @@ getTrackData <- function(option, month, bType) {
   }
   else if (option == "10% Most Occupied") {
     area_usage_df <- aggregate(area_usage_df$OCCUPIED.UNITS.PERCENTAGE, by=list(area_usage_df$TRACT.ID), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
-    print(area_usage_df)
     area_usage_df <- area_usage_df[order(-area_usage_df[2]),]
     area_usage_df <- head(area_usage_df, 0.1*nrow(area_usage_df))
   }

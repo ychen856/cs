@@ -61,7 +61,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                     #opitons
                                                     tags$div(class = "filter",
                                                         selectizeInput(
-                                                            'westLoopSide_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population"), selected = "Electricity", multiple = FALSE
+                                                            'westLoopSide_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population", "Average House Size", "Total Units"), selected = "Electricity", multiple = FALSE
                                                         )
                                                     ), #options
                                                     uiOutput("monthList"),
@@ -155,7 +155,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                     #opitons
                                                     tags$div(class = "filter",
                                                         selectizeInput(
-                                                            'l_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population"), selected = "Electricity", multiple = FALSE
+                                                            'l_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population", "Average House Size", "Total Units"), selected = "Electricity", multiple = FALSE
                                                         )
                                                     ), #options
                                                     uiOutput("l_monthList"),
@@ -222,7 +222,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                     #opitons
                                                     tags$div(class = "filter",
                                                         selectizeInput(
-                                                            'r_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population"), selected = "Electricity", multiple = FALSE
+                                                            'r_option', 'Select a Data Option: ', choices = c("Electricity", "Gas", "Building Type", "Building Age", "Building Height", "Total Population", "Average House Size", "Total Units"), selected = "Electricity", multiple = FALSE
                                                         )
                                                     ), #options
                                                     uiOutput("r_monthList"),

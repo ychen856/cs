@@ -348,6 +348,11 @@ function(input, output, session) {
   
   
   ####################################
+  observe({
+    p<- input$west_loop_side_map_click
+    print("hiiiiiii")
+  })
+  
   observe({ 
     p <- input$west_loop_side_map_marker_click  # typo was on this line
     print(p$id)

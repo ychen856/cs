@@ -1,5 +1,9 @@
+library(shiny)
+library(sf)
+library(tigris)
+library(dplyr)
 
-
+options(tigris_use_cache = TRUE)
 #2010 usage data
 usage_2010_df <- read.csv("Energy_Usage_2010.csv", sep = ",", header = TRUE)
 #2010 boundaries data
