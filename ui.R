@@ -91,9 +91,9 @@ ui <- fluidPage(class = "p-0 m-0",
                                                                 "Map:"
                                                         ),
                                                         tags$div(style = "height: 650px",
-                                                            #shinycssloaders::withSpinner(
+                                                            shinycssloaders::withSpinner(
                                                                 leafletOutput("west_loop_side_map", height = 630),
-                                                            #)
+                                                            )
                                                         )
                                                     )
                                                 )
@@ -130,15 +130,34 @@ ui <- fluidPage(class = "p-0 m-0",
                 #Camparison page start
                 tabPanel("Community Area Comparison", class = "p-0",
                     mainPanel(class = "panel p-0",
+                        tags$div(
+                            column(10),
+                            column(2, class="margin-bottom: none !important",
+                                selectizeInput(
+                                    'palette', 'Select a Legend Color Set: ', choices = c("Set 1", "Set 2", "Set 3"), selected = "Set 1", multiple = FALSE
+                                )
+                            )
+                        ),  
                         #first map start
                         column(6, class = "p-0",
                             tags$div(class = "card border-title shadow",
                                 #card Start
                                 tags$div(class = "card-body",
                                     tags$div(
-                                        tags$div(class = "title",
-                                            tags$span("First Map")
+                                        column(3, 
+                                            tags$div(class = "title",
+                                                tags$span("First Map")
+                                            )
+                                        ),
+                                        column(6),
+                                        column(3, 
+                                        tags$div(class = "filter",
+                                                        selectizeInput(
+                                                            'l_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Near West Side", multiple = FALSE
+                                                        )
+                                                    )
                                         )
+                                        
                                     ),
                                     fluidRow(style = "margin: 2px",
                                         column(4, style = "background-color: white",
@@ -146,11 +165,6 @@ ui <- fluidPage(class = "p-0 m-0",
                                                     tags$div(class = "subtitle",
                                                         tags$i(class = "fas fa-search"),
                                                             "Data Filter:"
-                                                    ),
-                                                    tags$div(class = "filter",
-                                                        selectizeInput(
-                                                            'l_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Near West Side", multiple = FALSE
-                                                        )
                                                     ),
                                                     #opitons
                                                     tags$div(class = "filter",
@@ -172,7 +186,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             "Census Plot:"
                                                     ),
                                                     tags$div(
-                                                        plotOutput("l_block_data_plot", height = 250)
+                                                        plotOutput("l_block_data_plot", height = 230)
                                                     )
                                                 )
                                                 
@@ -184,10 +198,10 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             tags$i(class = "fas fa-map-marked-alt"),
                                                                 "Map:"
                                                         ),
-                                                        tags$div(style = "height: 650px",
-                                                            #shinycssloaders::withSpinner(
-                                                                leafletOutput("l_map", height = 630)
-                                                            #)
+                                                        tags$div(style = "height: 580px",
+                                                            shinycssloaders::withSpinner(
+                                                                leafletOutput("l_map", height = 580)
+                                                            )
                                                         )
                                                     )
                                                 )
@@ -202,10 +216,21 @@ ui <- fluidPage(class = "p-0 m-0",
                                 #card Start
                                 tags$div(class = "card-body",
                                     tags$div(
-                                        tags$div(
-                                            class = "title",
-                                            tags$span("Second Map")
+                                        column(3,
+                                            tags$div(
+                                                class = "title",
+                                                tags$span("Second Map")
+                                            )
+                                        ),
+                                        column(6),
+                                        column(3,
+                                            tags$div(class = "filter",
+                                                selectizeInput(
+                                                    'r_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Loop", multiple = FALSE
+                                                )
+                                            )
                                         )
+                                        
                                     ),
                                     fluidRow(style = "margin: 2px",
                                         column(4, style = "background-color: white",
@@ -214,11 +239,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         tags$i(class = "fas fa-search"),
                                                             "Data Filter:"
                                                     ),
-                                                    tags$div(class = "filter",
-                                                        selectizeInput(
-                                                            'r_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Loop", multiple = FALSE
-                                                        )
-                                                    ),
+                                                    
                                                     #opitons
                                                     tags$div(class = "filter",
                                                         selectizeInput(
@@ -239,7 +260,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             "Census Plot:"
                                                     ),
                                                     tags$div(
-                                                        plotOutput("r_block_data_plot", height = 250)
+                                                        plotOutput("r_block_data_plot", height = 230)
                                                     )
                                                 )
                                                 
@@ -251,10 +272,10 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             tags$i(class = "fas fa-map-marked-alt"),
                                                                 "Map:"
                                                         ),
-                                                        tags$div(style = "height: 650px",
-                                                            #shinycssloaders::withSpinner(
-                                                                leafletOutput("rr_map", height = 630),
-                                                            #)
+                                                        tags$div(style = "height: 580",
+                                                            shinycssloaders::withSpinner(
+                                                                leafletOutput("rr_map", height = 580),
+                                                            )
                                                         )
                                                     )
                                                 )
@@ -267,7 +288,7 @@ ui <- fluidPage(class = "p-0 m-0",
                 ), #Camparison page end
 
                 #whole us
-                tabPanel("Energy Plants in US", class = "p-0",
+                tabPanel("Tract Level Census Data", class = "p-0",
                     mainPanel(class = "panel p-0",
                         fluidRow(
                             column(12, class = "p-0",
@@ -291,7 +312,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                     #opitons
                                                     tags$div(class = "filter",
                                                         selectizeInput(
-                                                            't_option', 'Select a Data Option: ', choices = c("Electricity", "10% Most Electricity", "Gas", "10% Most Gas", "Building Type", "Building Age", "10% Newest Buildings", "10% Oldest Buildings", "Building Height", "10% Tallest Buildings", "Total Population", "10% Most Population", "10% Most Occupied", "10% Highest Renting Rate"), selected = "Electricity", multiple = FALSE
+                                                            't_option', 'Select a Data Option: ', choices = c("Electricity", "10% Most Electricity", "Gas", "10% Most Gas", "Building Type", "Building Age", "10% Newest Buildings", "10% Oldest Buildings", "Building Height", "10% Tallest Buildings", "Total Population", "10% Most Population", "10% Most Occupied", "10% Highest Renting Rate", "Average House Size", "Total Units"), selected = "Electricity", multiple = FALSE
                                                         )
                                                     ), #options
                                                     uiOutput("t_monthList"),
@@ -321,9 +342,9 @@ ui <- fluidPage(class = "p-0 m-0",
                                                                 "Map:"
                                                         ),
                                                         tags$div(style = "height: 650px",
-                                                            #shinycssloaders::withSpinner(
+                                                            shinycssloaders::withSpinner(
                                                                 leafletOutput("t_map", height = 630),
-                                                            #)
+                                                            )
                                                         )
                                                     )
                                                 )
@@ -335,73 +356,6 @@ ui <- fluidPage(class = "p-0 m-0",
                         )
                     )
                 ), #whole us
-
-                #idle & new
-                tabPanel("Idle & New Plants", class = "p-0",
-                    mainPanel(class = "panel p-0",
-                        fluidRow(
-                            column(12, class = "p-0",
-                                tags$div(class = "card border-title shadow",
-                                    #card Start
-                                    tags$div(class = "card-body",
-                                        tags$div(
-                                            column(2, class = "p-0",
-                                                tags$div(
-                                                    class = "title",
-                                                    tags$span("Idle & New Plants")
-                                                )
-                                            ),
-                                            column(2,
-                                                tags$div(
-                                                    tags$div(class = "filter cust-text",
-                                                        #selectizeInput(
-                                                        #    'yearInput_in', 'Select a year: ', choices = c(2010, 2018), selected = "2018", multiple = FALSE
-                                                        #)
-                                                    )
-                                                )
-                                            ),
-                                            column(10, tags$div())
-                                        ),
-                                        fluidRow(style = "margin: 2px",
-                                            column(2, style = "background-color: white",
-                                                tags$div(
-                                                    tags$div(class = "subtitle",
-                                                        tags$i(class = "fas fa-search"),
-                                                            "Data Filter:"
-                                                    ),
-                                                    #plants filter start
-                                                    tags$div(class = "filter",
-                                                        #checkboxGroupInput("sourceInput_in", "Only show: ", choices = c(source_idle_new))
-                                                    ), #plants filter end
-                                                    tags$div(class = "filter",
-                                                        #checkboxGroupInput("energySourceInput_in", "Energy source: ", choices = c(energySource_dist))
-                                                    ), #energy source filter end
-
-                                                    #actionButton("reset_in", "Reset view")        
-                                                )
-                                            ),
-                                            column(10,
-                                                tags$div(class = "row",
-                                                    column(12,
-                                                        tags$div(class = "subtitle",
-                                                            tags$i(class = "fas fa-map-marked-alt"),
-                                                                "Map:"
-                                                        ),
-                                                        tags$div(style = "height: 630px",
-                                                            #shinycssloaders::withSpinner(
-                                                            #    leafletOutput("leaf_in", height = 630),
-                                                            #)
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        ) #End of fluid row
-                                    ) #End of card body
-                                ) #End of card
-                            )
-                        )
-                    )
-                ), #idle & new
 
                 #About page start
                 tabPanel("About", class = "p-0",
@@ -422,21 +376,17 @@ ui <- fluidPage(class = "p-0 m-0",
                                             ),
                                             tags$div(
                                                 tags$span(class = "cust-text-md", "Date: "),
-                                                tags$span("03.15.2020")
+                                                tags$span("04.24.2021")
                                             ),
                                             tags$div(
                                                 tags$span(class = "cust-text-md", "Data Source: "),
-                                                tags$a(href = "https://www.epa.gov/egrid/download-data", "https://www.epa.gov/egrid/download-data"),
+                                                tags$a(href = "https://data.cityofchicago.org/Environment-Sustainable-Development/Energy-Usage-2010/8yq3-m6wp", "https://data.cityofchicago.org/Environment-Sustainable-Development/Energy-Usage-2010/8yq3-m6wp"),
                                                 tags$br(),
-                                                tags$span(" 2018: eGRID2018v2 Data File (XLSX), eGRID2000_plant.xls file and its EGRDPLNT00 tab"),
-                                                tags$br(), 
-                                                tags$span(" 2010: Download eGRID historical files (1996-2016) (ZIP), eGRID2010_Data.xls file/EGRDPLNT10 tab"),
-                                                tags$br(), 
-                                                tags$span(" 2000: Download eGRID historical files (1996-2016) (ZIP), eGRID2000_plant.xls file/EGRDPLNT00 tab")
+                                                tags$span("Map spiral data download from tigris library")
                                             ),
                                             tags$div(
                                                 tags$span(class = "cust-text-md", "Git Repository: "),
-                                                tags$a(href = "https://github.com/ychen856/cs424_project_2.git", "https://github.com/ychen856/cs424_project_2.git")
+                                                tags$a(href = "https://github.com/ychen856/cs424_project_3.git", "https://github.com/ychen856/cs424_project_3.git")
                                             )
                                         ),
                                     )

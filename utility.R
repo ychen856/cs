@@ -1,5 +1,6 @@
 source("global.R")
 library(mapview)
+library(colorspace)
 
 getData <- function(area, option, month, bType) {
   print("======= get data start =======")
@@ -607,15 +608,40 @@ getMaxAmount <- function(df) {
   return (max(df$AMOUNT, na.rm = TRUE))
 }
 
-generateMap <- function(option, area, df) {
-  blue = colorRampPalette(c('#c9daf8', '#1c4587'))
-  red = colorRampPalette(c('#f4cccc', '#660000'))
-  purple = colorRampPalette(c('#b4a7d6', '#20124d'))
-  orange = colorRampPalette(c('#fce5cd', '#783f04'))
-  red2 = colorRampPalette(c('#e6b8af', '#5b0f00'))
-  pink2 = colorRampPalette(c('#d5a6bd', '#4c1130'))
-  green = colorRampPalette(c('#d9ead3', '#274e13'))
-  yellow = colorRampPalette(c('#fff2cc', '#7f6000'))
+generateMap <- function(color, option, area, df) {
+  if(color == "Set 1") {
+    blue = colorRampPalette(c('#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58'))
+    red = colorRampPalette(c('#3288bd', '#66c2a5', '#abdda4', '#e6f598', '#ffffbf', '#fee08b', '#fdae61', '#f46d43', '#d53e4f'))
+    purple = colorRampPalette(c('#f7fcfd', '#e0ecf4', '#bfd3e6', '#9ebcda', '#8c96c6', '#8c6bb1', '#88419d', '#810f7c', '#4d004b'))
+    green2 = colorRampPalette(c('#fff7fb', '#ece2f0', '#d0d1e6', '#a6bddb', '#67a9cf', '#3690c0', '#02818a', '#016c59', '#014636'))
+    red2 = colorRampPalette(c('#ffffcc', '#ffeda0', '#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#bd0026', '#800026'))
+    pink2 = colorRampPalette(c('#f7f4f9', '#e7e1ef', '#d4b9da', '#c994c7', '#df65b0', '#e7298a', '#ce1256', '#980043', '#67001f'))
+    green = colorRampPalette(c('#f7fcfd', '#e5f5f9', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b'))
+    cyan = colorRampPalette(c('#fff7fb', '#ece7f2', '#d0d1e6', '#a6bddb', '#74a9cf', '#3690c0', '#0570b0', '#045a8d', '#023858'))
+    brown = colorRampPalette(c('#ffffe5', '#fff7bc', '#fee391', '#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#662506'))
+  }
+  else if(color == "Set 2") {
+    blue = diverging_hcl(12, h = c(130, 43), c=100, l=c(70, 90))
+    red = heat_hcl(12, c=c(80, 30), power = c(1/5, 1.5))
+    purple = diverge_hcl(12, h=c(255, 330), l = c(40, 90))
+    green2 = terrain_hcl(12, c=c(65, 0), l=c(45, 95), power=c(1/3, 1.5))
+    red2 = diverge_hcl(12, c=100, l=c(50, 90), power = 1)
+    pink2 = diverge_hcl(12, h=c(128, 330), c=98, l=c(65, 90))
+    green = diverge_hcl(12, h=c(130, 43), c=100, l= c(70, 90))
+    cyan = diverge_hcl(12, h=c(180, 70), c=70, l=c(90, 95))
+    brown = diverging_hcl(12, h = c(246, 40), c=96)
+  }
+  else if(color == "Set 3") {
+    blue = diverging_hcl(12, h = c(130, 43), c=100, l=c(70, 90), rev = TRUE)
+    red = heat_hcl(12, c=c(80, 30), power = c(1/5, 1.5), rev = TRUE)
+    purple = diverge_hcl(12, h=c(255, 330), l = c(40, 90), rev = TRUE)
+    green2 = terrain_hcl(12, c=c(65, 0), l=c(45, 95), power=c(1/3, 1.5), rev = TRUE)
+    red2 = diverge_hcl(12, c=100, l=c(50, 90), power = 1, rev = TRUE)
+    pink2 = diverge_hcl(12, h=c(128, 330), c=98, l=c(65, 90), rev = TRUE)
+    green = diverge_hcl(12, h=c(130, 43), c=100, l= c(70, 90), rev = TRUE)
+    cyan = diverge_hcl(12, h=c(180, 70), c=70, l=c(90, 95), rev = TRUE)
+    brown = diverging_hcl(12, h = c(246, 40), c=96, rev = TRUE)
+  }
   
   if(option == "Electricity" || option == "10% Most Electricity") {
     mapview(df, zcol = "AMOUNT", layer.name = paste(area, "Electricity(KWH)"), col.regions = blue)@map %>% 
@@ -665,7 +691,7 @@ generateMap <- function(option, area, df) {
                        layerId = ~GEOID10, label = "Generate plot...") 
   }
   else if (option == "Building Age" || option == "10% Oldest Buildings" || option == "10% Newest Buildings") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Building Age', col.regions = purple)@map %>% 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Age', col.regions = purple)@map %>% 
       addMapPane("polygons", zIndex = 999) %>% 
       addCircleMarkers(data = df, 
                        lat = ~as.numeric(INTPTLAT10), 
@@ -676,7 +702,7 @@ generateMap <- function(option, area, df) {
                        layerId = ~GEOID10, label = "Generate plot...") 
   }
   else if (option == "Building Height" || option == "10% Tallest Buildings") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Building Height', col.regions = orange)@map %>% 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Height', col.regions = green2)@map %>% 
       addMapPane("polygons", zIndex = 999) %>% 
       addCircleMarkers(data = df, 
                        lat = ~as.numeric(INTPTLAT10), 
@@ -687,7 +713,7 @@ generateMap <- function(option, area, df) {
                        layerId = ~GEOID10, label = "Generate plot...") 
   }
   else if (option == "Total Population" || option == "10% Most Population") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Population', col.regions = pink2)@map %>% 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Population', col.regions = pink2)@map %>% 
       addMapPane("polygons", zIndex = 999) %>% 
       addCircleMarkers(data = df, 
                        lat = ~as.numeric(INTPTLAT10), 
@@ -698,7 +724,7 @@ generateMap <- function(option, area, df) {
                        layerId = ~GEOID10, label = "Generate plot...") 
   }
   else if(option == "10% Most Occupied") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Occupied Rate', col.regions = green)@map %>% 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Occupied Rate', col.regions = green)@map %>% 
       addMapPane("polygons", zIndex = 999) %>% 
       addCircleMarkers(data = df, 
                        lat = ~as.numeric(INTPTLAT10), 
@@ -709,7 +735,7 @@ generateMap <- function(option, area, df) {
                        layerId = ~GEOID10, label = "Generate plot...") 
   }
   else if (option == "10% Highest Renting Rate") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Renting Rate', col.regions = yellow)@map %>% 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Renting Rate', col.regions = red2)@map %>% 
       addMapPane("polygons", zIndex = 999) %>% 
       addCircleMarkers(data = df, 
                        lat = ~as.numeric(INTPTLAT10), 
@@ -721,7 +747,7 @@ generateMap <- function(option, area, df) {
     
   }
   else if (option == "Total Units") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Total Units', col.regions = yellow)@map %>% 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Units', col.regions = cyan)@map %>% 
       addMapPane("polygons", zIndex = 999) %>% 
       addCircleMarkers(data = df, 
                        lat = ~as.numeric(INTPTLAT10), 
@@ -732,7 +758,7 @@ generateMap <- function(option, area, df) {
                        layerId = ~GEOID10, label = "Generate plot...") 
   }
   else if(option == "Average House Size") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'House Size', col.regions = yellow)@map %>% 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average House Size', col.regions = brown)@map %>% 
       addMapPane("polygons", zIndex = 999) %>% 
       addCircleMarkers(data = df, 
                        lat = ~as.numeric(INTPTLAT10), 
@@ -751,6 +777,7 @@ getTrackData <- function(option, month, bType) {
   print("======= get data end =======")
   
   area_usage_df <- usage_2010_df
+  selected_df <- subset(chicago_tract_df, GEOID10 %in% area_usage_df$TRACT.ID)
   
   if(!"All" %in% bType) {
     area_usage_df <- subset(area_usage_df, BUILDING.TYPE %in% bType)
@@ -914,27 +941,28 @@ getTrackData <- function(option, month, bType) {
     area_usage_df <- head(area_usage_df, 0.1*nrow(area_usage_df))
   }
   else if (option == "10% Most Occupied") {
-    area_usage_df <- aggregate(area_usage_df$OCCUPIED.UNITS.PERCENTAGE, by=list(area_usage_df$TRACT.ID), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
+    area_usage_df <- aggregate(area_usage_df$OCCUPIED.UNITS.PERCENTAGE, by=list(area_usage_df$TRACT.ID), FUN=mean, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     area_usage_df <- area_usage_df[order(-area_usage_df[2]),]
     area_usage_df <- head(area_usage_df, 0.1*nrow(area_usage_df))
   }
   else if(option == "10% Highest Renting Rate") {
-    area_usage_df <- aggregate(area_usage_df$RENTER.OCCUPIED.HOUSING.PERCENTAGE, by=list(area_usage_df$TRACT.ID), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
+    area_usage_df <- aggregate(area_usage_df$RENTER.OCCUPIED.HOUSING.PERCENTAGE, by=list(area_usage_df$TRACT.ID), FUN=mean, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
     area_usage_df <- area_usage_df[order(-area_usage_df[2]),]
     area_usage_df <- head(area_usage_df, 0.1*nrow(area_usage_df))
   }
-  
+  else if(option == "Average House Size") {
+    area_usage_df <- aggregate(area_usage_df$AVERAGE.HOUSESIZE, by=list(area_usage_df$TRACT.ID), FUN=mean, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
+  }
+  else if(option == "Total Units") {
+    area_usage_df <- aggregate(area_usage_df$TOTAL.UNITS, by=list(area_usage_df$TRACT.ID), FUN=sum, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
+  }
   
   
   names(area_usage_df)[1] <- c("GEOID10")
   names(area_usage_df)[2] <- c("AMOUNT")
   
-  #print(area_usage_df)
-  selected_df <- subset(chicago_tract_df, GEOID10 %in% area_tract_mapping_df$GEOID10)
+  #selected_df <- subset(chicago_tract_df, GEOID10 %in% area_tract_mapping_df$GEOID10)
   
   usage_block_df <- selected_df %>% left_join(area_usage_df)
-  
-  #print(nrow(usage_block_df))
-  #print(usage_block_df)
   return (usage_block_df)
 }
