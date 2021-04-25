@@ -15,6 +15,7 @@ getData <- function(area, option, month, bType) {
   area_usage_df <- subset(usage_2010_df, str_replace_all(string=tolower(COMMUNITY.AREA.NAME), pattern=" ", repl="") == str_replace_all(string=tolower(area), pattern=" ", repl=""))
   selected_block_df <- subset(chicago_block_df, GEOID10 %in% area_usage_df$GEOID10)
   
+  
   #building type
   if(!"All" %in% bType) {
     area_usage_df <- subset(area_usage_df, BUILDING.TYPE %in% bType)
@@ -267,54 +268,58 @@ getMaxAmount <- function(df) {
 
 generateMap <- function(color, option, area, df) {
   if(color == "Set 1") {
-    blue = colorRampPalette(c('#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58'))
-    red = colorRampPalette(c('#3288bd', '#66c2a5', '#abdda4', '#e6f598', '#ffffbf', '#fee08b', '#fdae61', '#f46d43', '#d53e4f'))
-    purple = colorRampPalette(c('#f7fcfd', '#e0ecf4', '#bfd3e6', '#9ebcda', '#8c96c6', '#8c6bb1', '#88419d', '#810f7c', '#4d004b'))
+    blue2 = colorRampPalette(c('#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58'))
+    red1 = colorRampPalette(c('#3288bd', '#66c2a5', '#abdda4', '#e6f598', '#ffffbf', '#fee08b', '#fdae61', '#f46d43', '#d53e4f'))
+    purple2 = colorRampPalette(c('#f7fcfd', '#e0ecf4', '#bfd3e6', '#9ebcda', '#8c96c6', '#8c6bb1', '#88419d', '#810f7c', '#4d004b'))
     green2 = colorRampPalette(c('#fff7fb', '#ece2f0', '#d0d1e6', '#a6bddb', '#67a9cf', '#3690c0', '#02818a', '#016c59', '#014636'))
     red2 = colorRampPalette(c('#ffffcc', '#ffeda0', '#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#bd0026', '#800026'))
     pink2 = colorRampPalette(c('#f7f4f9', '#e7e1ef', '#d4b9da', '#c994c7', '#df65b0', '#e7298a', '#ce1256', '#980043', '#67001f'))
-    green = colorRampPalette(c('#f7fcfd', '#e5f5f9', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b'))
-    cyan = colorRampPalette(c('#fff7fb', '#ece7f2', '#d0d1e6', '#a6bddb', '#74a9cf', '#3690c0', '#0570b0', '#045a8d', '#023858'))
-    brown = colorRampPalette(c('#ffffe5', '#fff7bc', '#fee391', '#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#662506'))
+    green1 = colorRampPalette(c('#f7fcfd', '#e5f5f9', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b'))
+    cyan1 = colorRampPalette(c('#fff7fb', '#ece7f2', '#d0d1e6', '#a6bddb', '#74a9cf', '#3690c0', '#0570b0', '#045a8d', '#023858'))
+    brown1 = colorRampPalette(c('#ffffe5', '#fff7bc', '#fee391', '#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#662506'))
   }
   else if(color == "Set 2") {
-    blue = diverging_hcl(12, h = c(130, 43), c=100, l=c(70, 90))
-    red = heat_hcl(12, c=c(80, 30), power = c(1/5, 1.5))
-    purple = diverge_hcl(12, h=c(255, 330), l = c(40, 90))
+    blue2 = heat_hcl(12, h=c(75, 40), c=c(40, 80), power = 1)
+    red1 = heat_hcl(12, c=c(80, 30), power = c(1/5, 1.5))
+    purple2 = diverge_hcl(12, h=c(255, 330), l = c(40, 90))
     green2 = terrain_hcl(12, c=c(65, 0), l=c(45, 95), power=c(1/3, 1.5))
     red2 = diverge_hcl(12, c=100, l=c(50, 90), power = 1)
     pink2 = diverge_hcl(12, h=c(128, 330), c=98, l=c(65, 90))
-    green = diverge_hcl(12, h=c(130, 43), c=100, l= c(70, 90))
-    cyan = diverge_hcl(12, h=c(180, 70), c=70, l=c(90, 95))
-    brown = diverging_hcl(12, h = c(246, 40), c=96)
+    green1 = diverge_hcl(12, h=c(130, 43), c=100, l= c(70, 90))
+    cyan1 = diverge_hcl(12, h=c(180, 70), c=70, l=c(90, 95))
+    brown1 = diverging_hcl(12, h = c(246, 40), c=96)
   }
   else if(color == "Set 3") {
-    blue = diverging_hcl(12, h = c(130, 43), c=100, l=c(70, 90), rev = TRUE)
-    red = heat_hcl(12, c=c(80, 30), power = c(1/5, 1.5), rev = TRUE)
-    purple = diverge_hcl(12, h=c(255, 330), l = c(40, 90), rev = TRUE)
+    blue2 = heat_hcl(12, h=c(75, 40), c=c(40, 80), power = 1, rev=TRUE)
+    red1 = heat_hcl(12, c=c(80, 30), power = c(1/5, 1.5), rev = TRUE)
+    purple2 = diverge_hcl(12, h=c(255, 330), l = c(40, 90), rev = TRUE)
     green2 = terrain_hcl(12, c=c(65, 0), l=c(45, 95), power=c(1/3, 1.5), rev = TRUE)
     red2 = diverge_hcl(12, c=100, l=c(50, 90), power = 1, rev = TRUE)
     pink2 = diverge_hcl(12, h=c(128, 330), c=98, l=c(65, 90), rev = TRUE)
-    green = diverge_hcl(12, h=c(130, 43), c=100, l= c(70, 90), rev = TRUE)
-    cyan = diverge_hcl(12, h=c(180, 70), c=70, l=c(90, 95), rev = TRUE)
-    brown = diverging_hcl(12, h = c(246, 40), c=96, rev = TRUE)
+    green1 = diverge_hcl(12, h=c(130, 43), c=100, l= c(70, 90), rev = TRUE)
+    cyan1 = diverge_hcl(12, h=c(180, 70), c=70, l=c(90, 95), rev = TRUE)
+    brown1 = diverging_hcl(12, h = c(246, 40), c=96, rev = TRUE)
   }
   
   if(option == "Electricity" || option == "10% Most Electricity") {
-    mapview(df, zcol = "AMOUNT", layer.name = paste(area, "Electricity(KWH)"), col.regions = blue)
+    mapview(df, zcol = "AMOUNT", layer.name = paste(area, 'Elec(KWH)'), col.regions = blue2)@map
   }
   else if (option == "Gas" || option =="10% Most Gas") {
-    mapview(df, zcol = "AMOUNT", layer.name = paste(area, 'GAS(THERMS)'), col.regions = red)
+    mapview(df, zcol = "AMOUNT", layer.name = paste(area, 'GAS(THERMS)'), col.regions = red1)@map
   }
   else if (option == "Building Type") {
+    df$AMOUNT[length(df$AMOUNT) < 1] <- "Unknown"
     m <- NULL
-    if(nrow(subset(df, AMOUNT == "Residential")) > 0) 
+    if(nrow(subset(df, AMOUNT == "Residential")) > 0) {
       m <- mapview(subset(df, AMOUNT == "Residential"), layer.name = "Residential", zcol = "AMOUNT", col.regions = "#F5793A")
+    }
     if(nrow(subset(df, AMOUNT == "Commercial")) > 0) {
-      if(is.null(m))
+      if(is.null(m)) {
         m <- mapview(subset(df, AMOUNT == "Commercial"), zcol = "AMOUNT", layer.name = "Commercial", col.regions = "#A95AA1")
-      if(!is.null(m))
+      }
+      if(!is.null(m)) {
         m <- m + mapview(subset(df, AMOUNT == "Commercial"), zcol = "AMOUNT", layer.name = "Commercial", col.regions = "#A95AA1")
+      }
     }
     if(nrow(subset(df, AMOUNT == "Industrial")) > 0) {
       if(is.null(m))
@@ -322,27 +327,34 @@ generateMap <- function(color, option, area, df) {
       if(!is.null(m)) 
         m <- m + mapview(subset(df, AMOUNT == "Industrial"), zcol = "AMOUNT", layer.name = "Industrial", col.regions = "#85C0F9") 
     }
+    if(nrow(subset(df, AMOUNT == "Unknown"))) {
+      if(is.null(m))
+        m <- mapview(subset(df, AMOUNT == "Unknown"), zcol = "AMOUNT", layer.name = "Unknown", col.regions = "grey") 
+      if(!is.null(m)) 
+        m <- m + mapview(subset(df, AMOUNT == "Unknown"), zcol = "AMOUNT", layer.name = "Unknown", col.regions = "grey") 
+    }
+    m <- m@map
   }
   else if (option == "Building Age" || option == "10% Oldest Buildings" || option == "10% Newest Buildings") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Age', col.regions = purple)
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Age', col.regions = purple2)@map
   }
   else if (option == "Building Height" || option == "10% Tallest Buildings") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Height', col.regions = green2)
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Height', col.regions = green2)@map
   }
   else if (option == "Total Population" || option == "10% Most Population") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Total Population', col.regions = pink2)
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Population', col.regions = pink2)@map
   }
   else if(option == "10% Most Occupied") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Occupied Rate', col.regions = green)
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Occupied Rate', col.regions = green1)@map
   }
   else if (option == "10% Highest Renting Rate") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Renting Rate', col.regions = red2) 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Renting Rate', col.regions = red2)@map
   }
   else if (option == "Total Units") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Total Units', col.regions = cyan)
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Units', col.regions = cyan1)@map
   }
   else if(option == "Average House Size") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average House Size', col.regions = brown)
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average House Size', col.regions = brown1)@map
   }
 }
 

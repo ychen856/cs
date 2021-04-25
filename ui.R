@@ -94,7 +94,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 650px",
                                                             shinycssloaders::withSpinner(
-                                                                mapviewOutput("west_loop_side_map", height = 630),
+                                                                leafletOutput("west_loop_side_map", height = 630),
                                                             )
                                                         )
                                                     )
@@ -131,35 +131,32 @@ ui <- fluidPage(class = "p-0 m-0",
 
                 #Camparison page start
                 tabPanel("Community Area Comparison", class = "p-0",
-                    mainPanel(class = "panel p-0",
-                        tags$div(
-                            column(10),
-                            column(2, class="margin-bottom: none !important",
-                                selectizeInput(
-                                    'palette', 'Select a Legend Color Set: ', choices = c("Set 1", "Set 2", "Set 3"), selected = "Set 1", multiple = FALSE
-                                )
-                            )
-                        ),  
+                    mainPanel(class = "panel p-0", 
                         #first map start
                         column(6, class = "p-0",
                             tags$div(class = "card border-title shadow",
                                 #card Start
                                 tags$div(class = "card-body",
                                     tags$div(
-                                        column(3, 
+                                        column(4, 
                                             tags$div(class = "title",
                                                 tags$span("First Map")
                                             )
                                         ),
-                                        column(6),
-                                        column(3, 
-                                        tags$div(class = "filter",
-                                                        selectizeInput(
-                                                            'l_area', 'Select a Community: ', choices = community_area_dist, selected = "Near West Side", multiple = FALSE
-                                                        )
-                                                    )
+                                        column(4,
+                                            tags$div(class = "filter",
+                                                selectizeInput(
+                                                    'l_area', 'Select a Community: ', choices = community_area_dist, selected = "Near West Side", multiple = FALSE
+                                                )
+                                            )
+                                        ),
+                                        column(4, 
+                                            tags$div(class = "filter",
+                                                selectizeInput(
+                                                    'palette_l', 'Select a Legend Color Set: ', choices = c("Set 1", "Set 2", "Set 3"), selected = "Set 1", multiple = FALSE
+                                                )
+                                            )
                                         )
-                                        
                                     ),
                                     fluidRow(style = "margin: 2px",
                                         column(4, style = "background-color: white",
@@ -203,7 +200,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 580px",
                                                             shinycssloaders::withSpinner(
-                                                                mapviewOutput("l_map", height = 580)
+                                                                leafletOutput("l_map", height = 580)
                                                             )
                                                         )
                                                     )
@@ -219,17 +216,23 @@ ui <- fluidPage(class = "p-0 m-0",
                                 #card Start
                                 tags$div(class = "card-body",
                                     tags$div(
-                                        column(3,
+                                        column(4,
                                             tags$div(
                                                 class = "title",
                                                 tags$span("Second Map")
                                             )
                                         ),
-                                        column(6),
-                                        column(3,
+                                        column(4,
                                             tags$div(class = "filter",
                                                 selectizeInput(
                                                     'r_area', 'Select a Community: ', choices = community_area_dist, selected = "Loop", multiple = FALSE
+                                                )
+                                            )
+                                        ),
+                                        column(4, 
+                                            tags$div(class = "filter",
+                                                selectizeInput(
+                                                    'palette_r', 'Select a Legend Color Set: ', choices = c("Set 1", "Set 2", "Set 3"), selected = "Set 1", multiple = FALSE
                                                 )
                                             )
                                         )
@@ -278,7 +281,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 580",
                                                             shinycssloaders::withSpinner(
-                                                                mapviewOutput("rr_map", height = 580),
+                                                                leafletOutput("rr_map", height = 580),
                                                             )
                                                         )
                                                     )
@@ -302,7 +305,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                     tags$div(
                                         tags$div(
                                             class = "title",
-                                            tags$span("Energy Plants in US")
+                                            tags$span("Tract Data in Chicago")
                                         )
                                     ),
                                     fluidRow(style = "margin: 2px",
@@ -348,7 +351,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 650px",
                                                             shinycssloaders::withSpinner(
-                                                                mapviewOutput("t_map", height = 630),
+                                                                leafletOutput("t_map", height = 630),
                                                             )
                                                         )
                                                     )
