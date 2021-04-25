@@ -78,6 +78,23 @@ function(input, output, session) {
     })
   })
   
+  observe({
+    plotData <- getPlotData("Near West Side")
+    output$block_data_plot <- renderPlot({
+      ggplot(plotData, aes(x = MONTH, y = AMOUNT)) + 
+        geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+        labs(title="Annual usage in Near West Side", x="Month", y = "Amount") + 
+        scale_y_continuous(labels = scales::comma) + 
+        scale_x_continuous(breaks = seq(1, 12, 1),
+                           labels = c("1" = "Jan", 
+                                      "2" = "Fab",
+                                      "3" = "Mar",
+                                      "4" = "Apr",
+                                      "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+        theme(legend.position="bottom") +
+        scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
+    })
+  })
   
   ###################################
   #      part II                    #
@@ -92,6 +109,22 @@ function(input, output, session) {
     
     output$l_map <- renderLeaflet({
       g <- generateMap(input$palette, input$l_option, input$l_area, usage_block_df)
+    })
+    
+    plotData <- getPlotData(ifelse(is.null(p), "Near West Side", input$l_area))
+    output$l_block_data_plot <- renderPlot({
+      ggplot(plotData, aes(x = MONTH, y = AMOUNT)) + 
+        geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+        labs(title=paste("Annual usage in ", input$l_area), x="Month", y = "Amount") + 
+        scale_y_continuous(labels = scales::comma) + 
+        scale_x_continuous(breaks = seq(1, 12, 1),
+                           labels = c("1" = "Jan", 
+                                      "2" = "Fab",
+                                      "3" = "Mar",
+                                      "4" = "Apr",
+                                      "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+        theme(legend.position="bottom") +
+        scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
     })
   })
   
@@ -144,42 +177,28 @@ function(input, output, session) {
     })
   })
   
-  observe({ 
-    p <- input$l_map_marker_click  # typo was on this line
-    print(p$id)
-    if(!is.null(p$id)) {
-      plotData <- getPlotData(p$id)
-      
-      if(!is.null(plotData)) {
-        p2 <- ggplot(subset(plotData, GEOID10 == p$id), aes(x = MONTH, y = AMOUNT)) + 
-          geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
-          labs(title=paste("Annual usage in ", p$id), x="Month", y = "Amount") + 
-          scale_y_continuous(labels = scales::comma) + 
-          scale_x_continuous(breaks = seq(1, 12, 1),
-                             labels = c("1" = "Jan", 
-                                        "2" = "Fab",
-                                        "3" = "Mar",
-                                        "4" = "Apr",
-                                        "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
-          theme(legend.position="bottom") +
-          scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
-        
-        output$l_block_data_plot <- renderPlot({
-          p2
-        })
-      }
-      else {
-        output$l_block_data_plot <- renderPlot({})
-      }
-    }
-  })
-  
   ###########right map###############
   observeEvent(input$r_area, {
     usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data), input$r_buildingType)
     
     output$rr_map <- renderLeaflet({
       g <- generateMap(input$palette, input$r_option, input$r_area, usage_block_df)
+    })
+    
+    plotData <- getPlotData(ifelse(is.null(p), "Loop", input$r_area))
+    output$r_block_data_plot <- renderPlot({
+      ggplot(plotData, aes(x = MONTH, y = AMOUNT)) + 
+        geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+        labs(title=paste("Annual usage in ", input$r_area), x="Month", y = "Amount") + 
+        scale_y_continuous(labels = scales::comma) + 
+        scale_x_continuous(breaks = seq(1, 12, 1),
+                           labels = c("1" = "Jan", 
+                                      "2" = "Fab",
+                                      "3" = "Mar",
+                                      "4" = "Apr",
+                                      "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+        theme(legend.position="bottom") +
+        scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
     })
   })
   
@@ -231,36 +250,6 @@ function(input, output, session) {
     output$rr_map <- renderLeaflet({
       g <- generateMap(input$palette, input$r_option, input$r_area, usage_block_df)
     })
-  })
-  
-  observe({ 
-    p <- input$rr_map_marker_click  # typo was on this line
-    print(p$id)
-    if(!is.null(p$id)) {
-      plotData <- getPlotData(p$id)
-      
-      if(!is.null(plotData)) {
-        p2 <- ggplot(subset(plotData, GEOID10 == p$id), aes(x = MONTH, y = AMOUNT)) + 
-          geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
-          labs(title=paste("Annual usage in ", p$id), x="Month", y = "Amount") + 
-          scale_y_continuous(labels = scales::comma) + 
-          scale_x_continuous(breaks = seq(1, 12, 1),
-                             labels = c("1" = "Jan", 
-                                        "2" = "Fab",
-                                        "3" = "Mar",
-                                        "4" = "Apr",
-                                        "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
-          theme(legend.position="bottom") +
-          scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
-        
-        output$r_block_data_plot <- renderPlot({
-          p2
-        })
-      }
-      else {
-        output$r_block_data_plot <- renderPlot({})
-      }
-    }
   })
   
   
@@ -318,37 +307,24 @@ function(input, output, session) {
       g <- generateMap("Set 1", input$t_option, "Chicago", usage_block_df)
     })
   })
-  
-  observe({ 
-    p <- input$t_map_marker_click  # typo was on this line
-    print(p$id)
-    if(!is.null(p$id)) {
-      plotData <- getPlotData_t(p$id)
-      
-      if(!is.null(plotData)) {
-        p2 <- ggplot(subset(plotData, GEOID10 == p$id), aes(x = MONTH, y = AMOUNT)) + 
-          geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
-          labs(title=paste("Annual usage in ", p$id), x="Month", y = "Amount") + 
-          scale_y_continuous(labels = scales::comma) + 
-          scale_x_continuous(breaks = seq(1, 12, 1),
-                             labels = c("1" = "Jan", 
-                                        "2" = "Fab",
-                                        "3" = "Mar",
-                                        "4" = "Apr",
-                                        "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
-          theme(legend.position="bottom") +
-          scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
-        
-        output$tract_data_plot <- renderPlot({
-          p2
-        })
-      }
-      else {
-        output$tract_data_plot <- renderPlot({})
-      }
-    }
+
+  observe({
+    plotData <- getPlotData_t()
+    output$tract_data_plot <- renderPlot({
+      ggplot(plotData, aes(x = MONTH, y = AMOUNT)) + 
+        geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+        labs(title="Annual usage in Chicago", x="Month", y = "Amount") + 
+        scale_y_continuous(labels = scales::comma) + 
+        scale_x_continuous(breaks = seq(1, 12, 1),
+                         labels = c("1" = "Jan", 
+                                    "2" = "Fab",
+                                    "3" = "Mar",
+                                    "4" = "Apr",
+                                    "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+        theme(legend.position="bottom") +
+        scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
+    })
   })
-  
   
   ####################################
   
@@ -359,27 +335,7 @@ function(input, output, session) {
       #print(subset(plot_df, GEOID10 == p$id))
       plotData <- getPlotData(p$id)
       
-      if(!is.null(plotData)) {
-        p2 <- ggplot(subset(plotData, GEOID10 == p$id), aes(x = MONTH, y = AMOUNT)) + 
-            geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
-            labs(title=paste("Annual usage in ", p$id), x="Month", y = "Amount") + 
-            scale_y_continuous(labels = scales::comma) + 
-            scale_x_continuous(breaks = seq(1, 12, 1),
-                             labels = c("1" = "Jan", 
-                                        "2" = "Fab",
-                                        "3" = "Mar",
-                                        "4" = "Apr",
-                                        "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
-            theme(legend.position="bottom") +
-           scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
-      
-        output$block_data_plot <- renderPlot({
-          p2
-        })
-      }
-      else {
-        output$block_data_plot <- renderPlot({})
-      }
+
       
       Names <- c('', 'Census Block', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
       NamesFooter <- c('Total', '', '', '', '', '', '', '', '', '', '', '', '', '', '')
@@ -461,8 +417,8 @@ function(input, output, session) {
         }, 
         colnames = c('Census Block', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December'),
         #options = list(searching = FALSE, pageLength = 19, lengthChange = FALSE, order = list(list(1, 'asc'))), rownames = FALSE 
-        ) %>%
-          formatCurrency(3, currency = "", interval = 3, mark = ",")#%>% 
+        ) #%>%
+          #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
           #formatPercentage(3, 1)
       )
       
@@ -475,14 +431,33 @@ function(input, output, session) {
         }, 
         colnames = c('Census Block', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December'),
         #options = list(searching = FALSE, pageLength = 19, lengthChange = FALSE, order = list(list(1, 'asc'))), rownames = FALSE 
-        ) %>%
-          formatCurrency(3, currency = "", interval = 3, mark = ",")#%>% 
+        ) #%>%
+          #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
         #formatPercentage(3, 1)
       )
     }
     print(p$id)
   })
+  
+  gen_plot <- function(plotData) {
+    if(!is.null(plotData)) {
+      p2 <- ggplot(plotData, aes(x = MONTH, y = AMOUNT)) + 
+        geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
+        labs(title="Annual usage in Chicago", x="Month", y = "Amount") + 
+        scale_y_continuous(labels = scales::comma) + 
+        scale_x_continuous(breaks = seq(1, 12, 1),
+                           labels = c("1" = "Jan", 
+                                      "2" = "Fab",
+                                      "3" = "Mar",
+                                      "4" = "Apr",
+                                      "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
+        theme(legend.position="bottom") +
+        scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
+    }
+  }
 }
+
+
 
 
 
