@@ -5,6 +5,7 @@ library(dplyr)
 library(colorspace)
 
 options(tigris_use_cache = TRUE)
+mapviewOptions(legend.pos = "bottomright")
 #2010 usage data
 usage_2010_df <- read.csv("Energy_Usage_2010.csv", sep = ",", header = TRUE)
 ################### read file ####################
