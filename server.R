@@ -207,7 +207,11 @@ function(input, output, session) {
   
   ###########left map################
   observeEvent(input$palette, {
-    print(input$palette)
+    usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)
+    
+    output$l_map <- renderMapview({
+      g <- generateMap(input$palette, input$l_option, input$l_area, usage_block_df)
+    })
   })
   observeEvent(input$l_area, {
     usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)

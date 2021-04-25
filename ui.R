@@ -155,7 +155,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                         column(3, 
                                         tags$div(class = "filter",
                                                         selectizeInput(
-                                                            'l_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Near West Side", multiple = FALSE
+                                                            'l_area', 'Select a Community: ', choices = community_area_dist, selected = "Near West Side", multiple = FALSE
                                                         )
                                                     )
                                         )
@@ -229,7 +229,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                         column(3,
                                             tags$div(class = "filter",
                                                 selectizeInput(
-                                                    'r_area', 'Select a Data Option: ', choices = community_area_dist, selected = "Loop", multiple = FALSE
+                                                    'r_area', 'Select a Community: ', choices = community_area_dist, selected = "Loop", multiple = FALSE
                                                 )
                                             )
                                         )

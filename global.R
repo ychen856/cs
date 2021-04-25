@@ -3,6 +3,7 @@ library(sf)
 library(tigris)
 library(dplyr)
 library(colorspace)
+library(mapview)
 
 options(tigris_use_cache = TRUE)
 mapviewOptions(legend.pos = "bottomright")
