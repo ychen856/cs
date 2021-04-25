@@ -104,7 +104,7 @@ function(input, output, session) {
                                      THERM.NOVEMBER.2010, THERM.DECEMBER.2010, TOTAL.THERMS) ~ COMMUNITY.AREA.NAME + BUILDING.TYPE, 
                                subset(usage_2010_df, COMMUNITY.AREA.NAME == "Near West Side"), sum)
     
-    Names <- c('', 'Community Area', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
+    Names <- c('', 'CommunityArea', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
     NamesFooter <- c('Total', '', '', '', '', '', '', '', '', '', '', '', '', '', '')
     sketch <- htmltools::withTags(table(
       tableHeader(Names),tableFooter(NamesFooter)
@@ -112,7 +112,7 @@ function(input, output, session) {
     opts <- list(
       pageLength = 5,
       searching = FALSE,
-      lengthChange = TRUE,
+      lengthChange = FALSE,
       columnDefs = list(list(width = '200px', targets = 1)),
       footerCallback = JS(
         "function( tfoot, data, start, end, display ) {",
@@ -182,7 +182,7 @@ function(input, output, session) {
       DT::datatable(container = sketch,extensions = 'Buttons',options = opts,{ 
         elec_df
       }, 
-      colnames = c('Community Area', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December'),
+      colnames = c('CommunityArea', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December'),
       #options = list(searching = FALSE, pageLength = 19, lengthChange = FALSE, order = list(list(1, 'asc'))), rownames = FALSE 
       ) #%>%
       #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
@@ -194,7 +194,7 @@ function(input, output, session) {
       DT::datatable(container = sketch,extensions = 'Buttons',options = opts,{ 
         gas_df  
       }, 
-      colnames = c('Community Area', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
+      colnames = c('CommunityArea', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
       ) #%>%
       #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
       #formatPercentage(3, 1)
