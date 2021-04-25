@@ -78,7 +78,9 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             "Census Plot:"
                                                     ),
                                                     tags$div(
-                                                        plotOutput("block_data_plot", height = 300)
+                                                        shinycssloaders::withSpinner(
+                                                            plotOutput("block_data_plot", height = 300)
+                                                        )
                                                     )
                                                 )
                                                 
@@ -186,7 +188,8 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             "Census Plot:"
                                                     ),
                                                     tags$div(
-                                                        plotOutput("l_block_data_plot", height = 230)
+                                                        shinycssloaders::withSpinner(
+                                                        plotOutput("l_block_data_plot", height = 230))
                                                     )
                                                 )
                                                 
@@ -260,7 +263,8 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             "Census Plot:"
                                                     ),
                                                     tags$div(
-                                                        plotOutput("r_block_data_plot", height = 230)
+                                                        shinycssloaders::withSpinner(
+                                                        plotOutput("r_block_data_plot", height = 230))
                                                     )
                                                 )
                                                 
@@ -329,7 +333,8 @@ ui <- fluidPage(class = "p-0 m-0",
                                                             "Census Plot:"
                                                     ),
                                                     tags$div(
-                                                        plotOutput("tract_data_plot", height = 300)
+                                                        shinycssloaders::withSpinner(
+                                                        plotOutput("tract_data_plot", height = 300))
                                                     )
                                                 )
                                                 
