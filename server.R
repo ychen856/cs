@@ -94,6 +94,111 @@ function(input, output, session) {
         theme(legend.position="bottom") +
         scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
     })
+    
+    elec_df <- aggregate( cbind(KWH.JANUARY.2010, KWH.FEBRUARY.2010, KWH.MARCH.2010, KWH.APRIL.2010,
+                                KWH.MAY.2010, KWH.JUNE.2010, KWH.JULY.2010, KWH.AUGUST.2010, KWH.SEPTEMBER.2010, KWH.OCTOBER.2010, 
+                                KWH.NOVEMBER.2010, KWH.DECEMBER.2010, TOTAL.KWH) ~ COMMUNITY.AREA.NAME + BUILDING.TYPE, 
+                          subset(usage_2010_df, COMMUNITY.AREA.NAME == "Near West Side"), sum)
+    gas_df <- gas <- aggregate(cbind(THERM.JANUARY.2010, THERM.FEBRUARY.2010, THERM.MARCH.2010, TERM.APRIL.2010,
+                                     THERM.MAY.2010, THERM.JUNE.2010, THERM.JULY.2010, THERM.AUGUST.2010, THERM.SEPTEMBER.2010, THERM.OCTOBER.2010, 
+                                     THERM.NOVEMBER.2010, THERM.DECEMBER.2010, TOTAL.THERMS) ~ COMMUNITY.AREA.NAME + BUILDING.TYPE, 
+                               subset(usage_2010_df, COMMUNITY.AREA.NAME == "Near West Side"), sum)
+    
+    Names <- c('', 'Community Area', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
+    NamesFooter <- c('Total', '', '', '', '', '', '', '', '', '', '', '', '', '', '')
+    sketch <- htmltools::withTags(table(
+      tableHeader(Names),tableFooter(NamesFooter)
+    ))
+    opts <- list(
+      pageLength = 5,
+      searching = FALSE,
+      lengthChange = TRUE,
+      columnDefs = list(list(width = '200px', targets = 1)),
+      footerCallback = JS(
+        "function( tfoot, data, start, end, display ) {",
+        "var api = this.api(), data;",
+        "$( api.column(3).footer()).html(",
+        "api.column(3).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(4).footer()).html(",
+        "api.column(4).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(5).footer()).html(",
+        "api.column(5).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(6).footer()).html(",
+        "api.column(6).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(7).footer()).html(",
+        "api.column(7).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(8).footer()).html(",
+        "api.column(8).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(9).footer()).html(",
+        "api.column(9).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(10).footer()).html(",
+        "api.column(10).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(11).footer()).html(",
+        "api.column(11).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(12).footer()).html(",
+        "api.column(12).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(13).footer()).html(",
+        "api.column(13).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");",
+        "$( api.column(14).footer()).html(",
+        "api.column(14).data().reduce( function ( a, b ) {",
+        "return a + b;",
+        "} )",
+        ");","}")
+    )
+    output$myTable_elec <- DT::renderDataTable(
+      DT::datatable(container = sketch,extensions = 'Buttons',options = opts,{ 
+        elec_df
+      }, 
+      colnames = c('Community Area', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December'),
+      #options = list(searching = FALSE, pageLength = 19, lengthChange = FALSE, order = list(list(1, 'asc'))), rownames = FALSE 
+      ) #%>%
+      #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
+      #formatPercentage(3, 1)
+    )
+    
+    output$myTable_gas <- DT::renderDataTable(
+      
+      DT::datatable(container = sketch,extensions = 'Buttons',options = opts,{ 
+        gas_df  
+      }, 
+      colnames = c('Community Area', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
+      ) #%>%
+      #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
+      #formatPercentage(3, 1)
+    )
   })
   
   ###################################
@@ -325,136 +430,7 @@ function(input, output, session) {
         scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
     })
   })
-  
-  ####################################
-  
-  observe({ 
-    p <- input$west_loop_side_map_marker_click  # typo was on this line
-    print(p$id)
-    if(!is.null(p$id)) {
-      #print(subset(plot_df, GEOID10 == p$id))
-      plotData <- getPlotData(p$id)
-      
 
-      
-      Names <- c('', 'Census Block', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December')
-      NamesFooter <- c('Total', '', '', '', '', '', '', '', '', '', '', '', '', '', '')
-      sketch <- htmltools::withTags(table(
-        tableHeader(Names),tableFooter(NamesFooter)
-      ))
-      opts <- list(
-        dom = 'Bfrtip',
-        footerCallback = JS(
-          "function( tfoot, data, start, end, display ) {",
-          "var api = this.api(), data;",
-          "$( api.column(3).footer()).html(",
-          "api.column(3).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(4).footer()).html(",
-          "api.column(4).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(5).footer()).html(",
-          "api.column(5).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(6).footer()).html(",
-          "api.column(6).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(7).footer()).html(",
-          "api.column(7).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(8).footer()).html(",
-          "api.column(8).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(9).footer()).html(",
-          "api.column(9).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(10).footer()).html(",
-          "api.column(10).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(11).footer()).html(",
-          "api.column(11).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(12).footer()).html(",
-          "api.column(12).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(13).footer()).html(",
-          "api.column(13).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");",
-          "$( api.column(14).footer()).html(",
-          "api.column(14).data().reduce( function ( a, b ) {",
-          "return a + b;",
-          "} )",
-          ");","}")
-      )
-      output$myTable_elec <- DT::renderDataTable(
-        
-        DT::datatable(container = sketch,extensions = 'Buttons',options = opts,{ 
-          subset(subset(usage_2010_df, GEOID10 == p$id), select = c(GEOID10, BUILDING.TYPE, KWH.JANUARY.2010, KWH.FEBRUARY.2010, KWH.MARCH.2010, 
-                                                                    KWH.APRIL.2010, KWH.MAY.2010, KWH.JUNE.2010, KWH.JULY.2010, KWH.AUGUST.2010, 
-                                                                    KWH.SEPTEMBER.2010, KWH.OCTOBER.2010, KWH.NOVEMBER.2010, KWH.DECEMBER.2010))
-        }, 
-        colnames = c('Census Block', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December'),
-        #options = list(searching = FALSE, pageLength = 19, lengthChange = FALSE, order = list(list(1, 'asc'))), rownames = FALSE 
-        ) #%>%
-          #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
-          #formatPercentage(3, 1)
-      )
-      
-      output$myTable_gas <- DT::renderDataTable(
-        
-        DT::datatable(container = sketch,extensions = 'Buttons',options = opts,{ 
-          subset(subset(usage_2010_df, GEOID10 == p$id), select = c(GEOID10, BUILDING.TYPE, THERM.JANUARY.2010, THERM.FEBRUARY.2010, THERM.MARCH.2010, 
-                                                                    TERM.APRIL.2010, THERM.MAY.2010, THERM.JUNE.2010, THERM.JULY.2010, THERM.AUGUST.2010, 
-                                                                    THERM.SEPTEMBER.2010, THERM.OCTOBER.2010, THERM.NOVEMBER.2010, THERM.DECEMBER.2010))
-        }, 
-        colnames = c('Census Block', 'Building Type','January', 'Fabuary', 'March', 'April', 'May', 'June', 'July', 'Augus', 'September', 'October', 'November', 'December'),
-        #options = list(searching = FALSE, pageLength = 19, lengthChange = FALSE, order = list(list(1, 'asc'))), rownames = FALSE 
-        ) #%>%
-          #formatCurrency(3:14, currency = "", interval = 3, mark = ",")#%>% 
-        #formatPercentage(3, 1)
-      )
-    }
-    print(p$id)
-  })
-  
-  gen_plot <- function(plotData) {
-    if(!is.null(plotData)) {
-      p2 <- ggplot(plotData, aes(x = MONTH, y = AMOUNT)) + 
-        geom_line(aes(x = MONTH, y = AMOUNT, color = SOURCE)) + 
-        labs(title="Annual usage in Chicago", x="Month", y = "Amount") + 
-        scale_y_continuous(labels = scales::comma) + 
-        scale_x_continuous(breaks = seq(1, 12, 1),
-                           labels = c("1" = "Jan", 
-                                      "2" = "Fab",
-                                      "3" = "Mar",
-                                      "4" = "Apr",
-                                      "5" = "May", "5" = "Jun", "7" = "Jul", "8" = "Agu", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec" )) +
-        theme(legend.position="bottom") +
-        scale_color_manual(values= c("Electricity" = "blue", "Gas" = "red"))
-    }
-  }
 }
 
 
