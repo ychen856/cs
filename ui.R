@@ -94,7 +94,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 650px",
                                                             shinycssloaders::withSpinner(
-                                                                leafletOutput("west_loop_side_map", height = 630),
+                                                                mapviewOutput("west_loop_side_map", height = 630),
                                                             )
                                                         )
                                                     )
@@ -203,7 +203,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 580px",
                                                             shinycssloaders::withSpinner(
-                                                                leafletOutput("l_map", height = 580)
+                                                                mapviewOutput("l_map", height = 580)
                                                             )
                                                         )
                                                     )
@@ -278,7 +278,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 580",
                                                             shinycssloaders::withSpinner(
-                                                                leafletOutput("rr_map", height = 580),
+                                                                mapviewOutput("rr_map", height = 580),
                                                             )
                                                         )
                                                     )
@@ -348,7 +348,7 @@ ui <- fluidPage(class = "p-0 m-0",
                                                         ),
                                                         tags$div(style = "height: 650px",
                                                             shinycssloaders::withSpinner(
-                                                                leafletOutput("t_map", height = 630),
+                                                                mapviewOutput("t_map", height = 630),
                                                             )
                                                         )
                                                     )

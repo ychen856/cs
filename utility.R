@@ -301,26 +301,10 @@ generateMap <- function(color, option, area, df) {
   }
   
   if(option == "Electricity" || option == "10% Most Electricity") {
-    mapview(df, zcol = "AMOUNT", layer.name = paste(area, "Electricity(KWH)"), col.regions = blue)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
+    mapview(df, zcol = "AMOUNT", layer.name = paste(area, "Electricity(KWH)"), col.regions = blue)
   }
   else if (option == "Gas" || option =="10% Most Gas") {
-    mapview(df, zcol = "AMOUNT", layer.name = paste(area, 'GAS(THERMS)'), col.regions = red)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
+    mapview(df, zcol = "AMOUNT", layer.name = paste(area, 'GAS(THERMS)'), col.regions = red)
   }
   else if (option == "Building Type") {
     m <- NULL
@@ -338,92 +322,27 @@ generateMap <- function(color, option, area, df) {
       if(!is.null(m)) 
         m <- m + mapview(subset(df, AMOUNT == "Industrial"), zcol = "AMOUNT", layer.name = "Industrial", col.regions = "#85C0F9") 
     }
-    m@map %>% addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
   }
   else if (option == "Building Age" || option == "10% Oldest Buildings" || option == "10% Newest Buildings") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Age', col.regions = purple)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Age', col.regions = purple)
   }
   else if (option == "Building Height" || option == "10% Tallest Buildings") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Height', col.regions = green2)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Building Height', col.regions = green2)
   }
   else if (option == "Total Population" || option == "10% Most Population") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Total Population', col.regions = pink2)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Population', col.regions = pink2)
   }
   else if(option == "10% Most Occupied") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Occupied Rate', col.regions = green)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Occupied Rate', col.regions = green)
   }
   else if (option == "10% Highest Renting Rate") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average Renting Rate', col.regions = red2)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
-    
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average Renting Rate', col.regions = red2) 
   }
   else if (option == "Total Units") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Total Units', col.regions = cyan)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...") 
+    mapview(df, zcol = "AMOUNT", layer.name = 'Total Units', col.regions = cyan)
   }
   else if(option == "Average House Size") {
-    mapview(df, zcol = "AMOUNT", layer.name = 'Average House Size', col.regions = brown)@map %>% 
-      addMapPane("polygons", zIndex = 999) %>% 
-      addCircleMarkers(data = df, 
-                       lat = ~as.numeric(INTPTLAT10), 
-                       lng = ~as.numeric(INTPTLON10), 
-                       fillOpacity=0, 
-                       weight = 0, 
-                       options = pathOptions(pane = "polygons"), 
-                       layerId = ~GEOID10, label = "Generate plot...")
+    mapview(df, zcol = "AMOUNT", layer.name = 'Average House Size', col.regions = brown)
   }
 }
 

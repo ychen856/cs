@@ -47,7 +47,7 @@ function(input, output, session) {
     
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, ifelse(is.null(input$month_data), "All", input$month_data) , input$westLoopSide_buildingType)
     
-    output$west_loop_side_map <- renderLeaflet({
+    output$west_loop_side_map <- renderMapview({
       g <- generateMap("Set 1", input$westLoopSide_option, "Near West Side", usage_block_df)
     })
   })
@@ -56,7 +56,7 @@ function(input, output, session) {
     month <- input$month_data
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, input$month_data, input$westLoopSide_buildingType)
     
-    output$west_loop_side_map <- renderLeaflet({
+    output$west_loop_side_map <- renderMapview({
       g <- generateMap("Set 1", input$westLoopSide_option, "Near West Side", usage_block_df)
     })
   })
@@ -65,7 +65,7 @@ function(input, output, session) {
     bType <- input$westLoopSide_buildingType
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, ifelse(is.null(input$month_data), "All", input$month_data), input$westLoopSide_buildingType)
     
-    output$west_loop_side_map <- renderLeaflet({
+    output$west_loop_side_map <- renderMapview({
       g <- generateMap("Set 1", input$westLoopSide_option, "Near West Side", usage_block_df)
     })
   })
@@ -73,7 +73,7 @@ function(input, output, session) {
   observeEvent(input$reset_btn, {
     usage_block_df <- getData("Near West Side", input$westLoopSide_option, ifelse(is.null(input$month_data), "All", input$month_data), input$westLoopSide_buildingType)
     
-    output$west_loop_side_map <- renderLeaflet({
+    output$west_loop_side_map <- renderMapview({
       g <- generateMap("Set 1", input$westLoopSide_option, "Near West Side", usage_block_df)
     })
   })
@@ -212,7 +212,7 @@ function(input, output, session) {
   observeEvent(input$l_area, {
     usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)
     
-    output$l_map <- renderLeaflet({
+    output$l_map <- renderMapview({
       g <- generateMap(input$palette, input$l_option, input$l_area, usage_block_df)
     })
     
@@ -251,7 +251,7 @@ function(input, output, session) {
   
     usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data) , input$l_buildingType)
     
-    output$l_map <- renderLeaflet({
+    output$l_map <- renderMapview({
       g <- generateMap(input$palette, input$l_option, input$l_area, usage_block_df)
     })
   })
@@ -260,7 +260,7 @@ function(input, output, session) {
     month <- input$l_month_data
     usage_block_df <- getData(input$l_area, input$l_option, input$l_month_data, input$l_buildingType)
     
-    output$l_map <- renderLeaflet({
+    output$l_map <- renderMapview({
       g <- generateMap(input$palette, input$l_option, input$l_area, usage_block_df)
     })
   })
@@ -269,7 +269,7 @@ function(input, output, session) {
     bType <- input$l_buildingType
     usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)
     
-    output$l_map <- renderLeaflet({
+    output$l_map <- renderMapview({
       g <- generateMap(input$palette, input$l_option, input$l_area, usage_block_df)
     })
   })
@@ -277,7 +277,7 @@ function(input, output, session) {
   observeEvent(input$l_reset_btn, {
     usage_block_df <- getData(input$l_area, input$l_option, ifelse(is.null(input$l_month_data), "All", input$l_month_data), input$l_buildingType)
     
-    output$l_map <- renderLeaflet({
+    output$l_map <- renderMapview({
       g <- generateMap(input$palette, input$l_option, input$l_area, usage_block_df)
     })
   })
@@ -286,7 +286,7 @@ function(input, output, session) {
   observeEvent(input$r_area, {
     usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data), input$r_buildingType)
     
-    output$rr_map <- renderLeaflet({
+    output$rr_map <- renderMapview({
       g <- generateMap(input$palette, input$r_option, input$r_area, usage_block_df)
     })
     
@@ -326,7 +326,7 @@ function(input, output, session) {
     
     usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data) , input$r_buildingType)
     
-    output$rr_map <- renderLeaflet({
+    output$rr_map <- renderMapview({
       g <- generateMap(input$palette, input$r_option, input$r_area, usage_block_df)
     })
   })
@@ -335,7 +335,7 @@ function(input, output, session) {
     month <- input$r_month_data
     usage_block_df <- getData(input$r_area, input$r_option, input$r_month_data, input$r_buildingType)
     
-    output$rr_map <- renderLeaflet({
+    output$rr_map <- renderMapview({
       generateMap(input$palette, input$r_option, input$r_area, usage_block_df)
     })
   })
@@ -344,7 +344,7 @@ function(input, output, session) {
     bType <- input$r_buildingType
     usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data), input$r_buildingType)
     
-    output$rr_map <- renderLeaflet({
+    output$rr_map <- renderMapview({
       g <- generateMap(input$palette, input$r_option, input$r_area, usage_block_df)
     })
   })
@@ -352,7 +352,7 @@ function(input, output, session) {
   observeEvent(input$r_reset_btn, {
     usage_block_df <- getData(input$r_area, input$r_option, ifelse(is.null(input$r_month_data), "All", input$r_month_data), input$r_buildingType)
     
-    output$rr_map <- renderLeaflet({
+    output$rr_map <- renderMapview({
       g <- generateMap(input$palette, input$r_option, input$r_area, usage_block_df)
     })
   })
@@ -381,7 +381,7 @@ function(input, output, session) {
     #usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$r_month_data), "All", input$t_month_data) , input$t_buildingType)
     usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
     
-    output$t_map <- renderLeaflet({
+    output$t_map <- renderMapview({
       g <- generateMap("Set 1", input$t_option, "Chicago",usage_block_df)
     })
   })
@@ -390,7 +390,7 @@ function(input, output, session) {
     month <- input$t_month_data
     usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
     
-    output$t_map <- renderLeaflet({
+    output$t_map <- renderMapview({
       g <- generateMap("Set 1", input$t_option, "Chicago", usage_block_df)
     })
   })
@@ -399,7 +399,7 @@ function(input, output, session) {
     bType <- input$t_buildingType
     usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
     
-    output$t_map <- renderLeaflet({
+    output$t_map <- renderMapview({
       g <- generateMap("Set 1", input$t_option, "Chicago", usage_block_df)
     })
   })
@@ -408,7 +408,7 @@ function(input, output, session) {
   observeEvent(input$t_reset_btn, {
     usage_block_df <- getTrackData(input$t_option, ifelse(is.null(input$t_month_data), "All", input$t_month_data), input$t_buildingType)
     
-    output$t_map <- renderLeaflet({
+    output$t_map <- renderMapview({
       g <- generateMap("Set 1", input$t_option, "Chicago", usage_block_df)
     })
   })
