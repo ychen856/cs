@@ -530,7 +530,7 @@ getTrackData <- function(option, month, bType) {
   }
   else if (option == "10% Most Occupied") {
     area_usage_df <- aggregate(area_usage_df$OCCUPIED.UNITS.PERCENTAGE, by=list(area_usage_df$TRACT.ID), FUN=mean, keep.names = TRUE, na.rm=TRUE, na.action=NULL)
-    area_usage_df <- area_usage_df[order(area_usage_df[2]),]
+    area_usage_df <- area_usage_df[order(-area_usage_df[2]),]
     area_usage_df <- head(area_usage_df, 0.1*nrow(area_usage_df))
   }
   else if(option == "10% Highest Renting Rate") {

@@ -5,8 +5,8 @@ account: ychen514
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4005174
-bundleId: 4518118
+bundleId: 4519801
 url: https://ychen514.shinyapps.io/cs424_project_3/
-when: 1619394312.50828
+when: 1619429380.49516
 asMultiple: FALSE
 asStatic: FALSE
